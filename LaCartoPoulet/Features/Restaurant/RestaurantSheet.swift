@@ -10,9 +10,11 @@ struct RestaurantSheet: View {
 
     @Environment(AccountViewModel.self) private var account
     @State private var ratings: [Rating]?
+    @State private var stats: RatingStats?
     @State private var failed = false
     @State private var showsForm = false
     @State private var reporting: Rating?
+    @State private var blocking: Rating?
 
     var body: some View {
         ScrollView {
@@ -52,6 +54,14 @@ struct RestaurantSheet: View {
                 AccountView(model: account)
             }
         }
+        .confirmationDialog("Bloquer \(blocking?.nickname ?? "") ?", isPresented: Binding(
+            get: { blocking != nil }, set: { if !$0 { blocking = nil } }), titleVisibility: .visible, presenting: blocking) { rating in
+            Button("Bloquer", role: .destructive) {
+                Task { if await account.block(rating.userID) { await load() } }
+            }
+        } message: { _ in
+            Text("Tu ne verras plus ses avis. Tu pourras le débloquer dans Mon compte.")
+        }
         // "is_mine" depends on who is signed in.
         .onChange(of: account.isSignedIn) { Task { await load() } }
     }
@@ -62,19 +72,19 @@ struct RestaurantSheet: View {
                 .font(.display(26, relativeTo: .title2))
                 .accessibilityAddTraits(.isHeader)
             Text(subtitle).font(.subheadline)
-            if let ratings, !ratings.isEmpty {
-                let average = Double(ratings.map(\.stars).reduce(0, +)) / Double(ratings.count)
+            if let stats {
+                let average = stats.avgStars
                 let score = HStack(spacing: 8) {
                     Text(DrumstickRating.formatted(average)).font(.display(28, relativeTo: .title2)).fixedSize()
                     DrumstickRating(value: average, size: 24, emptyColor: Color("Crispy").opacity(0.28))
                 }
-                let count = Text("\(ratings.count) avis").font(.subheadline)
+                let count = Text("\(stats.ratingCount) avis").font(.subheadline)
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 8) { score; count }
                     VStack(alignment: .leading, spacing: 4) { score; count }
                 }
                 .accessibilityElement()
-                .accessibilityLabel("\(DrumstickRating.formatted(average)) sur 5, \(ratings.count) avis")
+                .accessibilityLabel("\(DrumstickRating.formatted(average)) sur 5, \(stats.ratingCount) avis")
             }
         }
         .foregroundStyle(Color("Ink"))
@@ -108,7 +118,8 @@ struct RestaurantSheet: View {
             let placeholders = (1...3).map { Rating(id: -$0, stars: 4, comment: "Les tenders sont croustillants, la sauce vaut le détour.", createdAt: .now, nickname: "Poulette", userID: UUID(), isMine: true) }
             LazyVStack(alignment: .leading, spacing: 0) {
                 ForEach(ratings ?? placeholders) { rating in
-                    RatingRow(rating: rating, onReport: rating.isMine ? nil : { reporting = rating })
+                    RatingRow(rating: rating, onReport: rating.isMine ? nil : { reporting = rating },
+                              onBlock: rating.isMine || !account.isSignedIn ? nil : { blocking = rating })
                 }
             }
             .redacted(reason: ratings == nil ? .placeholder : [])
@@ -118,7 +129,9 @@ struct RestaurantSheet: View {
     private func load() async {
         failed = false
         do {
-            ratings = try await repository.ratings(for: restaurant.id)
+            async let list = repository.ratings(for: restaurant.id)
+            async let totals = repository.stats(for: restaurant.id)
+            (ratings, stats) = try await (list, totals)
         } catch is CancellationError {
         } catch {
             failed = true
@@ -137,6 +150,8 @@ struct RatingRow: View {
     let rating: Rating
     /// Nil on my own rating.
     var onReport: (() -> Void)?
+    /// Nil on my own rating and when signed out.
+    var onBlock: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -149,6 +164,9 @@ struct RatingRow: View {
                 if let onReport {
                     Menu {
                         Button("Signaler", systemImage: "flag", action: onReport)
+                        if let onBlock {
+                            Button("Bloquer cet utilisateur", systemImage: "hand.raised", role: .destructive, action: onBlock)
+                        }
                     } label: {
                         Image(systemName: "ellipsis").frame(width: 44, height: 44)
                     }
@@ -169,6 +187,7 @@ struct RatingRow: View {
         .accessibilityElement(children: .combine)
         .accessibilityActions {
             if let onReport { Button("Signaler", action: onReport) }
+            if let onBlock { Button("Bloquer cet utilisateur", action: onBlock) }
         }
     }
 

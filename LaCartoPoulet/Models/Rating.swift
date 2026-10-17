@@ -28,6 +28,16 @@ struct MyRating: Decodable, Equatable {
     var hidden = false
 }
 
+/// Average over every visible rating, blocked authors included (`restaurant_stats` view).
+struct RatingStats: Decodable, Equatable {
+    let avgStars: Double
+    let ratingCount: Int
+
+    enum CodingKeys: String, CodingKey {
+        case avgStars = "avg_stars", ratingCount = "rating_count"
+    }
+}
+
 enum ReportReason: String, CaseIterable, Identifiable {
     case insult, spam, offTopic = "off_topic", other
     var id: Self { self }

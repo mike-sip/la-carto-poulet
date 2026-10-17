@@ -9,6 +9,7 @@ final class FakeRatingRepository: RatingRepository, @unchecked Sendable {
     var deleted: [Int] = []
 
     func ratings(for restaurantID: Int) async throws -> [Rating] { [] }
+    func stats(for restaurantID: Int) async throws -> RatingStats? { nil }
     func myRating(for restaurantID: Int) async throws -> MyRating? { mine }
     func save(id: Int?, restaurantID: Int, stars: Int, comment: String?) async throws {
         if let failure { throw failure }

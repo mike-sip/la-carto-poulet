@@ -127,9 +127,11 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 ## Task 9: Block a user
 **Acceptance criteria:**
-- [ ] "Bloquer cet utilisateur" on a comment; that user's comments disappear for the blocker (filtered in the ratings query via the `blocks` table)
-- [ ] The blocked user's ratings still count in the average (they're only hidden from the blocker's view)
-- [ ] The blocker can see and undo blocks in the Account screen
+- [x] "Bloquer cet utilisateur" on a comment; that user's comments disappear for the blocker (filtered in the ratings query via the `blocks` table)
+- [x] The blocked user's ratings still count in the average (they're only hidden from the blocker's view)
+- [x] The blocker can see and undo blocks in the Account screen
+
+**Notes:** `rating_list` filters on `blocks`, and RLS keeps each user to their own rows. anon has a select grant but no policy, so the view still works signed out. The sheet header now reads `restaurant_stats`, so a block doesn't change the average. "Bloquer" asks for confirmation and only appears when signed in. The Account screen uses "Débloquer" buttons instead of swipe, because it's a ScrollView, not a List. A failed block shows its error in Mon compte only.
 
 **Verification:** SQL test (blocked user's comment not returned to the blocker, still returned to others); manual.
 **Dependencies:** 7

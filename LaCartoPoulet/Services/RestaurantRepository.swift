@@ -20,6 +20,8 @@ struct SupabaseRestaurantRepository: RestaurantRepository {
 protocol RatingRepository: Sendable {
     /// Visible ratings, newest first.
     func ratings(for restaurantID: Int) async throws -> [Rating]
+    /// Nil when nobody rated it yet.
+    func stats(for restaurantID: Int) async throws -> RatingStats?
     /// The signed-in user's rating here, nil if they haven't rated it.
     func myRating(for restaurantID: Int) async throws -> MyRating?
     /// Adds my rating, or updates it when `id` is given.
@@ -36,6 +38,14 @@ struct SupabaseRatingRepository: RatingRepository {
             .eq("restaurant_id", value: restaurantID)
             .order("created_at", ascending: false)
             .execute().value
+    }
+
+    func stats(for restaurantID: Int) async throws -> RatingStats? {
+        let rows: [RatingStats] = try await supabase.from("restaurant_stats")
+            .select("avg_stars, rating_count")
+            .eq("restaurant_id", value: restaurantID)
+            .execute().value
+        return rows.first
     }
 
     func myRating(for restaurantID: Int) async throws -> MyRating? {

@@ -1,6 +1,15 @@
 import Foundation
 import Supabase
 
+struct BlockedUser: Decodable, Identifiable, Equatable {
+    let id: UUID
+    let nickname: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "blocked_id", nickname
+    }
+}
+
 enum AuthFailure: Error, Equatable {
     case invalidEmail, wrongCode, nicknameTaken, tooManyRequests, offline
 }
@@ -14,6 +23,9 @@ protocol AuthService: Sendable {
     func nickname() async throws -> String?
     func setNickname(_ nickname: String) async throws
     func signOut() async throws
+    func blockedUsers() async throws -> [BlockedUser]
+    func block(_ userID: UUID) async throws
+    func unblock(_ userID: UUID) async throws
 }
 
 struct SupabaseAuthService: AuthService {
@@ -48,6 +60,29 @@ struct SupabaseAuthService: AuthService {
 
     func signOut() async throws {
         try await supabase.auth.signOut()
+    }
+
+    func blockedUsers() async throws -> [BlockedUser] {
+        try await mapped {
+            try await supabase.from("my_blocks").select("blocked_id, nickname")
+                .order("created_at", ascending: false).execute().value
+        }
+    }
+
+    func block(_ userID: UUID) async throws {
+        try await mapped {
+            let me = try await supabase.auth.session.user.id
+            do {
+                try await supabase.from("blocks")
+                    .insert(["blocker_id": me.uuidString, "blocked_id": userID.uuidString]).execute()
+            } catch let error as PostgrestError where error.code == "23505" {}  // already blocked
+        }
+    }
+
+    func unblock(_ userID: UUID) async throws {
+        try await mapped {
+            try await supabase.from("blocks").delete().eq("blocked_id", value: userID).execute()
+        }
     }
 
     /// Turns Supabase and network errors into the few cases the screens explain.

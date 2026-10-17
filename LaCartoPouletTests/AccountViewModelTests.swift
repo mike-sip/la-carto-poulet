@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import LaCartoPoulet
 
@@ -21,6 +22,13 @@ final class FakeAuthService: AuthService, @unchecked Sendable {
         savedNickname = nickname
     }
     func signOut() async throws { signedInEmail = nil }
+    var blocks: [BlockedUser] = []
+    func blockedUsers() async throws -> [BlockedUser] { blocks }
+    func block(_ userID: UUID) async throws {
+        if let failure { throw failure }
+        blocks.insert(BlockedUser(id: userID, nickname: "Troll"), at: 0)
+    }
+    func unblock(_ userID: UUID) async throws { blocks.removeAll { $0.id == userID } }
 }
 
 @MainActor struct AccountViewModelTests {
@@ -98,5 +106,25 @@ final class FakeAuthService: AuthService, @unchecked Sendable {
         #expect(model.isSignedIn && model.nickname == "Crête-de-Feu")
         await model.signOut()
         #expect(model.step == .email && auth.signedInEmail == nil)
+    }
+
+    @Test func blockThenUnblock() async {
+        let auth = FakeAuthService()
+        auth.signedInEmail = "crete@example.com"
+        let model = AccountViewModel(auth: auth)
+        let troll = UUID()
+        #expect(await model.block(troll))
+        #expect(model.blocked.map(\.id) == [troll])
+        await model.unblock(model.blocked[0])
+        #expect(model.blocked.isEmpty && auth.blocks.isEmpty)
+    }
+
+    @Test func blockFailureIsReported() async {
+        let auth = FakeAuthService()
+        auth.signedInEmail = "crete@example.com"
+        auth.failure = .offline
+        let model = AccountViewModel(auth: auth)
+        #expect(await model.block(UUID()) == false)
+        #expect(model.error?.hasPrefix("Pas de connexion") == true)
     }
 }

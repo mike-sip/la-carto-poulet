@@ -11,6 +11,7 @@ import Observation
     var nickname = ""
     private(set) var isWorking = false
     private(set) var error: String?
+    private(set) var blocked: [BlockedUser] = []
 
     private let auth: AuthService
 
@@ -81,16 +82,38 @@ import Observation
             try await auth.signOut()
             email = ""
             nickname = ""
+            blocked = []
             step = .email
         }
     }
 
-    private func run(_ work: () async throws -> Void) async {
+    func loadBlocks() async {
+        guard isSignedIn else { return }
+        await run { blocked = try await auth.blockedUsers() }
+    }
+
+    /// True once blocked, so the caller can reload the comments.
+    func block(_ userID: UUID) async -> Bool {
+        await run {
+            try await auth.block(userID)
+            blocked = try await auth.blockedUsers()
+        }
+    }
+
+    func unblock(_ user: BlockedUser) async {
+        await run {
+            try await auth.unblock(user.id)
+            blocked.removeAll { $0.id == user.id }
+        }
+    }
+
+    @discardableResult private func run(_ work: () async throws -> Void) async -> Bool {
         isWorking = true
         error = nil
         defer { isWorking = false }
         do {
             try await work()
+            return true
         } catch AuthFailure.invalidEmail {
             error = "Cette adresse email n'est pas valide."
         } catch AuthFailure.wrongCode {
@@ -104,5 +127,6 @@ import Observation
         } catch {
             self.error = "Ça n'a pas marché. Réessaie."
         }
+        return false
     }
 }
