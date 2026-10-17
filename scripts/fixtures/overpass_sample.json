@@ -1,0 +1,22 @@
+{"elements": [
+  {"type": "node", "id": 1, "lat": 45.75, "lon": 4.84, "expect": "cuisine",
+   "tags": {"amenity": "fast_food", "name": "Le Poulet Doré", "cuisine": "burger;fried_chicken", "addr:city": "Lyon"}},
+  {"type": "node", "id": 2, "lat": 48.85, "lon": 2.35, "expect": "cuisine",
+   "tags": {"amenity": "restaurant", "name": "Chez Marcel", "cuisine": "Rotisserie"}},
+  {"type": "node", "id": 3, "lat": 43.6, "lon": 1.44, "expect": "brand",
+   "tags": {"amenity": "fast_food", "name": "KFC Toulouse Centre", "brand": "KFC", "cuisine": "burger"}},
+  {"type": "node", "id": 4, "lat": 48.86, "lon": 2.38, "expect": "portuguese/peruvian + name",
+   "tags": {"amenity": "restaurant", "name": "Frango do Porto", "cuisine": "portuguese"}},
+  {"type": "node", "id": 5, "lat": 48.87, "lon": 2.36, "expect": null,
+   "tags": {"amenity": "restaurant", "name": "O Bacalhau", "cuisine": "portuguese"}},
+  {"type": "node", "id": 6, "lat": 44.84, "lon": -0.58, "expect": "name",
+   "tags": {"amenity": "restaurant", "name": "LA RÔTISSERIE DU MARCHÉ"}},
+  {"type": "way", "id": 7, "center": {"lat": 48.86, "lon": 2.35}, "expect": "name",
+   "tags": {"amenity": "fast_food", "name": "Wings & Co", "addr:housenumber": "12", "addr:street": "Rue de Lappe"}},
+  {"type": "node", "id": 8, "lat": 43.3, "lon": 5.37, "expect": null,
+   "tags": {"amenity": "restaurant", "name": "Apollo Pizza", "cuisine": "pizza"}},
+  {"type": "node", "id": 9, "lat": 43.3, "lon": 5.38, "expect": null,
+   "tags": {"amenity": "cafe", "name": "Café du Poulet"}},
+  {"type": "node", "id": 10, "lat": 47.2, "lon": -1.55, "expect": "portuguese/peruvian + name",
+   "tags": {"amenity": "restaurant", "name": "Pollos a la Brasa", "cuisine": "peruvian"}}
+]}
