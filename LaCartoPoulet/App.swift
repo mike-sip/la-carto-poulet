@@ -2,9 +2,13 @@ import SwiftUI
 
 @main
 struct LaCartoPouletApp: App {
+    @State private var account = AccountViewModel()
+
     var body: some Scene {
         WindowGroup {
             MapView()
+                .environment(account)
+                .task { await account.restore() }
         }
     }
 }

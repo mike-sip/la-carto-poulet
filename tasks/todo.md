@@ -80,9 +80,11 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Description:** `profiles` table (public nicknames). Sign-in sheet: enter email, receive a 6-digit code, enter it, choose a nickname the first time, stay signed in across launches. Sign out.
 
 **Acceptance criteria:**
-- [ ] Full flow works locally (code read from the local Supabase mail viewer)
-- [ ] Session survives an app relaunch
-- [ ] Invalid email, wrong code or taken nickname shows a French error; emails are never readable by other users (RLS)
+- [x] Full flow works locally (code read from the local Supabase mail viewer)
+- [x] Session survives an app relaunch
+- [x] Invalid email, wrong code or taken nickname shows a French error; emails are never readable by other users (RLS)
+
+**Notes:** `profiles` already existed (Task 5); `0004_profiles_write.sql` adds insert/update-own policies. The code email uses `supabase/templates/code.html`; hosted Supabase needs the same template set (Task 11). `AccountView` ("Mon compte", opened from the map's top-right button) holds sign-out; Task 9 extends it.
 
 **Verification:** unit test of the sign-in view model states with a fake auth service; manual run in the simulator.
 **Dependencies:** 3
@@ -100,7 +102,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 **Verification:** SQL tests (other user's rating untouchable; 0 or 6 rejected; 1001 chars rejected); unit tests of the form validation; manual loop.
 **Dependencies:** 5, 6
-**Files:** `supabase/migrations/0004_ratings_write.sql`, `supabase/tests/ratings_test.sql`, `Features/Restaurant/RatingForm.swift`, `Services/RatingRepository.swift`, `LaCartoPouletTests/RatingFormTests.swift`
+**Files:** `supabase/migrations/0005_ratings_write.sql`, `supabase/tests/ratings_test.sql`, `Features/Restaurant/RatingForm.swift`, `Services/RatingRepository.swift`, `LaCartoPouletTests/RatingFormTests.swift`
 **Scope:** M
 
 ### Checkpoint B
@@ -116,7 +118,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 **Verification:** SQL tests for the trigger and the double-report rejection; manual.
 **Dependencies:** 7
-**Files:** `supabase/migrations/0005_reports.sql`, `supabase/tests/reports_test.sql`, `Features/Restaurant/ReportSheet.swift`, `Services/RatingRepository.swift`
+**Files:** `supabase/migrations/0006_reports.sql`, `supabase/tests/reports_test.sql`, `Features/Restaurant/ReportSheet.swift`, `Services/RatingRepository.swift`
 **Scope:** S
 
 ## Task 9: Block a user
@@ -127,7 +129,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 **Verification:** SQL test (blocked user's comment not returned to the blocker, still returned to others); manual.
 **Dependencies:** 7
-**Files:** `supabase/migrations/0006_blocks.sql`, `supabase/tests/blocks_test.sql`, `Features/Restaurant/RestaurantSheet.swift`, `Features/Account/AccountView.swift`
+**Files:** `supabase/migrations/0007_blocks.sql`, `supabase/tests/blocks_test.sql`, `Features/Restaurant/RestaurantSheet.swift`, `Features/Account/AccountView.swift`
 **Scope:** S
 
 ## Task 10: Delete my account
@@ -138,7 +140,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 **Verification:** SQL test (all rows gone after the call; a user can only delete themselves); manual.
 **Dependencies:** 7
-**Files:** `supabase/migrations/0007_delete_account.sql`, `supabase/tests/delete_account_test.sql`, `Features/Account/AccountView.swift`, `Services/AuthService.swift`
+**Files:** `supabase/migrations/0008_delete_account.sql`, `supabase/tests/delete_account_test.sql`, `Features/Account/AccountView.swift`, `Services/AuthService.swift`
 **Scope:** S
 
 ## Task 11: OSM attribution + hosted Supabase + real-iPhone check

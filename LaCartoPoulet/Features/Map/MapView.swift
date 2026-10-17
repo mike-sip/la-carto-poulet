@@ -14,6 +14,8 @@ struct MapView: View {
     @State private var visibleRegion: MKCoordinateRegion?
     @State private var loadTask: Task<Void, Never>?
     @State private var selected: Restaurant?
+    @State private var showsAccount = false
+    @Environment(AccountViewModel.self) private var account
 
     var body: some View {
         Map(position: $position) {
@@ -42,6 +44,22 @@ struct MapView: View {
         }
         .mapControls {
             MapUserLocationButton()
+        }
+        .safeAreaInset(edge: .top) {
+            Button { showsAccount = true } label: {
+                Image(systemName: account.isSignedIn ? "person.fill" : "person")
+                    .font(.title3)
+                    .foregroundStyle(Color("Ink"))
+                    .frame(width: 44, height: 44)
+                    .background(Color("Feather"), in: Circle())
+                    .shadow(color: .black.opacity(0.2), radius: 3, y: 1)
+            }
+            .accessibilityLabel("Mon compte")
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.horizontal, 16)
+        }
+        .sheet(isPresented: $showsAccount) {
+            AccountView(model: account)
         }
         .onMapCameraChange(frequency: .onEnd) { context in
             reload(context.region)
@@ -117,5 +135,5 @@ struct MapView: View {
 }
 
 #Preview {
-    MapView()
+    MapView().environment(AccountViewModel())
 }

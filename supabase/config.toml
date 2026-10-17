@@ -244,6 +244,15 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# New and returning users both get the 6-digit code; the app has no link to open.
+[auth.email.template.magic_link]
+subject = "Ton code La Carto'Poulet"
+content_path = "./supabase/templates/code.html"
+
+[auth.email.template.confirmation]
+subject = "Ton code La Carto'Poulet"
+content_path = "./supabase/templates/code.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"
