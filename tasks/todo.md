@@ -65,9 +65,11 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Description:** `ratings` table, `restaurant_stats` view and read policy (non-hidden only). Tapping a marker opens a sheet with a yolk header (name in Shrikhand, "Fast food à Lyon 7e"), drumstick average, rating count, "Itinéraire" and comments (newest first). Builds the reusable `DrumstickRating` display view.
 
 **Acceptance criteria:**
-- [ ] Sheet matches the spec's Restaurant sheet; "Pas encore d'avis. Sois le premier !" when empty; "Itinéraire" opens Apple Maps
-- [ ] Hidden ratings never come back from the API (RLS, not app filtering)
-- [ ] `DrumstickRating` rounds to the nearest half drumstick, shows "4,3" and reads "4,3 sur 5, 12 avis" in VoiceOver
+- [x] Sheet matches the spec's Restaurant sheet; "Pas encore d'avis. Sois le premier !" when empty; "Itinéraire" opens Apple Maps
+- [x] Hidden ratings never come back from the API (RLS, not app filtering)
+- [x] `DrumstickRating` rounds to the nearest half drumstick, shows "4,3" and reads "4,3 sur 5, 12 avis" in VoiceOver
+
+**Notes:** "Donner mon avis" comes with Task 7 (it needs sign-in); `profiles` is created here because comments need nicknames, Task 6 adds its write policies. Average and count are computed from the loaded ratings; `restaurant_stats` is there for later use.
 
 **Verification:** SQL test (hidden rating unreadable by anon); unit test of the half-rounding (4.3 → 4.5, 4.2 → 4); manual with seeded ratings in light and dark mode, and with the largest Dynamic Type size.
 **Dependencies:** 4
@@ -84,7 +86,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 **Verification:** unit test of the sign-in view model states with a fake auth service; manual run in the simulator.
 **Dependencies:** 3
-**Files:** `supabase/migrations/0003b_profiles.sql`, `Services/AuthService.swift`, `Features/Account/SignInView.swift`, `Features/Account/AccountViewModel.swift`, `LaCartoPouletTests/AccountViewModelTests.swift`
+**Files:** `supabase/migrations/0004_profiles_write.sql`, `Services/AuthService.swift`, `Features/Account/SignInView.swift`, `Features/Account/AccountViewModel.swift`, `LaCartoPouletTests/AccountViewModelTests.swift`
 **Scope:** M
 
 ## Task 7: Create / edit / delete my rating

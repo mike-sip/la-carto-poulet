@@ -16,3 +16,18 @@ struct SupabaseRestaurantRepository: RestaurantRepository {
         ]).execute().value
     }
 }
+
+protocol RatingRepository: Sendable {
+    /// Visible ratings, newest first.
+    func ratings(for restaurantID: Int) async throws -> [Rating]
+}
+
+struct SupabaseRatingRepository: RatingRepository {
+    func ratings(for restaurantID: Int) async throws -> [Rating] {
+        try await supabase.from("rating_list")
+            .select("id, stars, comment, created_at, nickname")
+            .eq("restaurant_id", value: restaurantID)
+            .order("created_at", ascending: false)
+            .execute().value
+    }
+}

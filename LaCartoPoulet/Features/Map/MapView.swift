@@ -13,6 +13,7 @@ struct MapView: View {
     @State private var model = MapViewModel()
     @State private var visibleRegion: MKCoordinateRegion?
     @State private var loadTask: Task<Void, Never>?
+    @State private var selected: Restaurant?
 
     var body: some View {
         Map(position: $position) {
@@ -25,6 +26,8 @@ struct MapView: View {
                                 .resizable()
                                 .frame(width: 56, height: 56)
                                 .accessibilityLabel(cluster.restaurants[0].name)
+                                .accessibilityAddTraits(.isButton)
+                                .onTapGesture { selected = cluster.restaurants[0] }
                         }
                         .annotationTitles(.hidden)
                     } else {
@@ -64,6 +67,10 @@ struct MapView: View {
                     .background(Color("Feather"), in: Circle())
                     .padding(.bottom, 32)
             }
+        }
+        .sheet(item: $selected) { restaurant in
+            RestaurantSheet(restaurant: restaurant)
+                .presentationDetents([.medium, .large])
         }
         .task {
             if locationManager.authorizationStatus == .notDetermined {
