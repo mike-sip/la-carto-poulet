@@ -134,8 +134,8 @@ Saving a rating updates the sheet right away (optimistic) and rolls back with th
 ## Commands
 
 ```
-Build:  xcodebuild -scheme LaCartoPoulet -destination 'platform=iOS Simulator,name=iPhone Duo' build
-Test:   xcodebuild -scheme LaCartoPoulet -destination 'platform=iOS Simulator,name=iPhone Duo' test
+Build:  xcodebuild -scheme LaCartoPoulet -destination 'platform=iOS Simulator,name=iPhone 17' build
+Test:   xcodebuild -scheme LaCartoPoulet -destination 'platform=iOS Simulator,name=iPhone 17' test
 Import: python3 scripts/import_osm.py        # Overpass → Supabase restaurants table (upsert on osm_id)
 DB:     supabase db push                     # apply migrations in supabase/migrations
 ```
