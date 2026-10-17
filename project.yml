@@ -1,0 +1,56 @@
+name: LaCartoPoulet
+options:
+  bundleIdPrefix: fr.lacartopoulet
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: fr
+configFiles:
+  Debug: Config.xcconfig
+  Release: Config.xcconfig
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    from: 2.0.0
+targets:
+  LaCartoPoulet:
+    type: application
+    platform: iOS
+    sources:
+      - LaCartoPoulet
+      - path: design/fonts
+        buildPhase: resources
+    dependencies:
+      - package: Supabase
+    info:
+      path: LaCartoPoulet/Info.plist
+      properties:
+        CFBundleDisplayName: "La Carto'Poulet"
+        CFBundleDevelopmentRegion: fr
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIAppFonts: [Shrikhand-Regular.ttf]
+        NSLocationWhenInUseUsageDescription: "Ta position sert à te montrer les restos poulet autour de toi. Elle n'est jamais envoyée ni enregistrée."
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true  # local Supabase over http during development
+        SupabaseURL: $(SUPABASE_URL)
+        SupabaseAnonKey: $(SUPABASE_ANON_KEY)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: fr.lacartopoulet.app
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_VERSION: "5.0"
+  LaCartoPouletTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [LaCartoPouletTests]
+    settings:
+      GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: LaCartoPoulet
+schemes:
+  LaCartoPoulet:
+    build:
+      targets:
+        LaCartoPoulet: all
+    test:
+      targets: [LaCartoPouletTests]

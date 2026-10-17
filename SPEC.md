@@ -30,7 +30,7 @@ Source: OpenStreetMap, imported by a script. Free, and the data can be stored un
 | `cuisine` includes `portuguese` or `peruvian` **and** the name matches the chicken words below | subset of ~350 |
 | Any restaurant or fast food whose name matches the chicken words below | catches untagged places |
 
-Chicken words (case- and accent-insensitive): `poulet`, `chicken`, `frango`, `pollo`, `brasa`, `churrasc`, `rôtisserie`, `wings`, `tenders`.
+Chicken words (case- and accent-insensitive): `poulet`, `chicken`, `frango`, `pollo`, `brasa`, `churrasc`, `rôtisserie`, `wings`, `tenders`. Each word must start a word in the name ("Apollo Pizza" doesn't match `pollo`; `churrasc` matches churrasco and churrascaria).
 
 Expected v1 size: roughly 1,200–1,600 restaurants; the import script prints the real count per rule. Places missing from OpenStreetMap won't appear until the "suggest a restaurant" feature exists (v1.1 candidate).
 
@@ -134,8 +134,8 @@ Saving a rating updates the sheet right away (optimistic) and rolls back with th
 ## Commands
 
 ```
-Build:  xcodebuild -scheme LaCartoPoulet -destination 'platform=iOS Simulator,name=iPhone 16' build
-Test:   xcodebuild -scheme LaCartoPoulet -destination 'platform=iOS Simulator,name=iPhone 16' test
+Build:  xcodebuild -scheme LaCartoPoulet -destination 'platform=iOS Simulator,name=iPhone Duo' build
+Test:   xcodebuild -scheme LaCartoPoulet -destination 'platform=iOS Simulator,name=iPhone Duo' test
 Import: python3 scripts/import_osm.py        # Overpass → Supabase restaurants table (upsert on osm_id)
 DB:     supabase db push                     # apply migrations in supabase/migrations
 ```

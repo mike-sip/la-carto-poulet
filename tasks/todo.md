@@ -32,11 +32,11 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Description:** XcodeGen project with the iOS 17 app target, test target and `supabase-swift` dependency. The app opens on a full-screen map centred on the user's location (fallback: Paris). Adds the Chicken land tokens (`Yolk`, `Comb`, `Feet`, `Crispy`, `Ink`, `Feather`, light + dark), the `chicken-pin` and `drumstick` vectors, and bundles the Shrikhand font (with `OFL.txt`).
 
 **Acceptance criteria:**
-- [ ] `xcodegen generate` + the spec build command succeed
-- [ ] Location permission prompt shows a French explanation; on refusal the map shows Paris
-- [ ] Supabase URL and anon key come from a git-ignored `Config.xcconfig`
-- [ ] Asset catalog has the 6 colour tokens (spec hex values), `chicken-pin` (from `design/logo-symbol.svg`) and the `drumstick` template icon
-- [ ] `Font.custom("Shrikhand-Regular", size:, relativeTo:)` renders in a preview and scales with Dynamic Type
+- [x] `xcodegen generate` + the spec build command succeed
+- [x] Location permission prompt shows a French explanation; on refusal the map shows Paris
+- [x] Supabase URL and anon key come from a git-ignored `Config.xcconfig`
+- [x] Asset catalog has the 6 colour tokens (spec hex values), `chicken-pin` (from `design/logo-symbol.svg`) and the `drumstick` template icon
+- [x] `Font.custom("Shrikhand-Regular", size:, relativeTo:)` renders in a preview and scales with Dynamic Type
 
 **Verification:** build + test commands pass; manual: simulator with a custom location shows that place.
 **Dependencies:** 1
