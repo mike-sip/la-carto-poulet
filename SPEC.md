@@ -25,7 +25,7 @@ Source: OpenStreetMap, imported by a script. Free, and the data can be stored un
 
 | Rule | France count (taginfo, Oct 2026, all object types) |
 |---|---|
-| `cuisine` includes `chicken`, `fried_chicken` or `rotisserie` | ~1,130 |
+| `cuisine` lists `chicken`, `fried_chicken` or `rotisserie` first, or among at most two cuisines ("burger;pizza;chicken;kebab" doesn't count) | ~1,130 before this limit; first import: 1,245 |
 | `brand` is in the chain list: KFC, Popeyes, Chicken Street, Hungry Chicken… (you complete the list) | KFC alone ~415, mostly overlapping the row above |
 | `cuisine` includes `portuguese` or `peruvian` **and** the name matches the chicken words below | subset of ~350 |
 | Any restaurant or fast food whose name matches the chicken words below | catches untagged places |

@@ -1,4 +1,8 @@
 {"elements": [
+  {"type": "node", "id": 11, "lat": 48.86, "lon": 2.36, "expect": null,
+   "tags": {"amenity": "fast_food", "name": "Snack Express", "cuisine": "burger;pizza;chicken;kebab;tacos"}},
+  {"type": "node", "id": 12, "lat": 48.87, "lon": 2.37, "expect": "cuisine",
+   "tags": {"amenity": "fast_food", "name": "Le Spot", "cuisine": "kebab;chicken"}},
   {"type": "node", "id": 1, "lat": 45.75, "lon": 4.84, "expect": "cuisine",
    "tags": {"amenity": "fast_food", "name": "Le Poulet Doré", "cuisine": "burger;fried_chicken", "addr:city": "Lyon"}},
   {"type": "node", "id": 2, "lat": 48.85, "lon": 2.35, "expect": "cuisine",

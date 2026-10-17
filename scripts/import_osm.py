@@ -19,6 +19,7 @@ import sys
 import tempfile
 import time
 import unicodedata
+from datetime import datetime, timezone
 import urllib.parse
 from collections import Counter
 from pathlib import Path
@@ -45,8 +46,8 @@ def normalize(text: str) -> str:
     return "".join(c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)).lower()
 
 
-def cuisines(tags: dict) -> set[str]:
-    return {c.strip() for c in normalize(tags.get("cuisine", "")).split(";") if c.strip()}
+def cuisines(tags: dict) -> list[str]:
+    return [c.strip() for c in normalize(tags.get("cuisine", "")).split(";") if c.strip()]
 
 
 def chicken_rule(tags: dict) -> str | None:
@@ -55,11 +56,12 @@ def chicken_rule(tags: dict) -> str | None:
         return None
     found = cuisines(tags)
     name_match = bool(CHICKEN_WORDS.search(normalize(tags.get("name", ""))))
-    if found & CHICKEN_CUISINES:
+    # Chicken must be the main cuisine (listed first) or one of at most two: "burger;pizza;chicken;kebab" is not.
+    if found and (found[0] in CHICKEN_CUISINES or (len(found) <= 2 and CHICKEN_CUISINES.intersection(found))):
         return "cuisine"
     if normalize(tags.get("brand", "")) in CHAIN_BRANDS:
         return "brand"
-    if found & NAME_CUISINES and name_match:
+    if NAME_CUISINES.intersection(found) and name_match:
         return "portuguese/peruvian + name"
     if name_match:
         return "name"
@@ -99,13 +101,13 @@ area["ISO3166-2"="{region}"]["admin_level"="4"]->.a;
 out center tags;"""
 
 
-def post(url: str, body: bytes, headers: dict[str, str], timeout: int = 60) -> bytes:
+def post(url: str, body: bytes, headers: dict[str, str], timeout: int = 60, method: str = "POST") -> bytes:
     """POST with macOS curl: the system Python's LibreSSL 2.8 fails the TLS handshake with Overpass."""
     with tempfile.NamedTemporaryFile("w", suffix=".txt") as header_file:  # keeps the key out of `ps`
         header_file.write("".join(f"{k}: {v}\n" for k, v in headers.items()))
         header_file.flush()
         result = subprocess.run(
-            ["curl", "-sS", "--fail-with-body", "-m", str(timeout), "-H", f"@{header_file.name}",
+            ["curl", "-sS", "--fail-with-body", "-m", str(timeout), "-X", method, "-H", f"@{header_file.name}",
              "--data-binary", "@-", url],
             input=body, capture_output=True)
     if result.returncode != 0:
@@ -134,14 +136,19 @@ def fetch_region(region: str, refresh: bool) -> list[dict]:
 
 
 def upsert(rows: list[dict]) -> None:
+    """Upserts every row, then deletes the ones this run didn't touch (gone from OSM or no longer chicken)."""
     url = os.environ.get("SUPABASE_URL")
     key = os.environ.get("SUPABASE_SERVICE_KEY")
     if not url or not key:
         raise SystemExit("Set SUPABASE_URL and SUPABASE_SERVICE_KEY (never commit the key).")
+    headers = {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json",
+               "Prefer": "resolution=merge-duplicates,return=minimal"}
+    run = datetime.now(timezone.utc).isoformat()
     for start in range(0, len(rows), 500):
-        post(f"{url}/rest/v1/restaurants?on_conflict=osm_id", json.dumps(rows[start:start + 500]).encode(),
-             {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json",
-              "Prefer": "resolution=merge-duplicates,return=minimal"})
+        batch = [{**row, "updated_at": run} for row in rows[start:start + 500]]
+        post(f"{url}/rest/v1/restaurants?on_conflict=osm_id", json.dumps(batch).encode(), headers)
+    # Only reached after every region was fetched, so a failed download never deletes anything.
+    post(f"{url}/rest/v1/restaurants?updated_at=lt.{urllib.parse.quote(run)}", b"", headers, method="DELETE")
 
 
 def collect(elements: list[dict]) -> tuple[dict[str, dict], dict[str, str]]:

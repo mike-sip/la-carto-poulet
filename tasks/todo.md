@@ -58,8 +58,8 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 ### Checkpoint A
 - [x] Tests pass, build clean
-- [ ] The simulator shows the real imported dataset across France
-- [ ] You review the chicken rule results before we continue
+- [x] The simulator shows the real imported dataset across France
+- [x] You review the chicken rule results before we continue (stricter cuisine rule, 1,742 places)
 
 ## Task 5: Restaurant detail sheet
 **Description:** `ratings` table, `restaurant_stats` view and read policy (non-hidden only). Tapping a marker opens a sheet with a yolk header (name in Shrikhand, "Fast food à Lyon 7e"), drumstick average, rating count, "Itinéraire" and comments (newest first). Builds the reusable `DrumstickRating` display view.
