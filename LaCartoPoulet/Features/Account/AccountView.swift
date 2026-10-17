@@ -30,6 +30,12 @@ struct AccountView: View {
                     } else {
                         SignInView(model: model)
                     }
+                    HStack(spacing: 4) {
+                        Text("Données")
+                        OSMCredit()
+                    }
+                    .font(.footnote)
+                    .padding(.top, 16)
                 }
                 .padding(16)
             }

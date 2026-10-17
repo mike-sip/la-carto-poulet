@@ -87,6 +87,14 @@ struct MapView: View {
                     .background(Color("Comb"))
             }
         }
+        .overlay(alignment: .bottomTrailing) {
+            OSMCredit()
+                .font(.caption2)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color("Feather").opacity(0.85), in: Capsule())
+                .padding(8)
+        }
         .overlay(alignment: .bottom) {
             if model.isTooFar {
                 pill("Zoome pour voir les restos")
@@ -146,6 +154,14 @@ struct MapView: View {
         let span = MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta / 3,
                                     longitudeDelta: region.span.longitudeDelta / 3)
         withAnimation { position = .region(MKCoordinateRegion(center: cluster.coordinate, span: span)) }
+    }
+}
+
+/// Restaurant data comes from OpenStreetMap (ODbL): the credit must stay visible.
+struct OSMCredit: View {
+    var body: some View {
+        Link("© OpenStreetMap contributors", destination: URL(string: "https://www.openstreetmap.org/copyright")!)
+            .foregroundStyle(Color("Feet"))
     }
 }
 
