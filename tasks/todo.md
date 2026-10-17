@@ -155,9 +155,11 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Description:** Add "© OpenStreetMap contributors" in the map and the Account screen. App icon: export `design/app-icon.svg` to a 1024 px PNG in the asset catalog. Create the free hosted Supabase project *(you create the account; I push migrations and run the import)*. Run the app on your iPhone.
 
 **Acceptance criteria:**
-- [ ] Attribution visible and links to openstreetmap.org/copyright; placeholder app icon shows on the home screen
-- [ ] Hosted DB has the schema and the full import
+- [x] Attribution visible and links to openstreetmap.org/copyright; placeholder app icon shows on the home screen
+- [x] Hosted DB has the schema and the full import
 - [ ] On your iPhone over 4G, markers appear within 3 s
+
+**Notes:** Hosted project `tnkkgcyeokiuxjtrnyfr`; 8 migrations pushed with no seed; 1,742 restaurants imported (more than the 1,245 of the first import, because OSM grew). Editing the email templates needed custom SMTP, now Resend. The public key can read the map data and nothing private. Config.xcconfig (git-ignored) points at the hosted project.
 
 **Verification:** all tests pass; the spec's manual release checklist passes on the iPhone.
 **Dependencies:** 8, 9, 10
