@@ -1,0 +1,15 @@
+# Secrets
+.env
+.env.*
+Config.xcconfig
+supabase/.env
+
+# Raw OSM downloads
+data/osm/
+
+# Xcode
+*.xcodeproj/
+DerivedData/
+xcuserdata/
+.DS_Store
+__pycache__/
