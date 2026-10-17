@@ -19,9 +19,9 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Description:** `scripts/import_osm.py` (standard library only) fetches mainland France region by region from Overpass, applies the spec's chicken rule and upserts into `restaurants`.
 
 **Acceptance criteria:**
-- [ ] Applies the 4 spec rules (cuisine, brands, Portuguese/Peruvian + name, name only); words matched case- and accent-insensitively
-- [ ] Re-running creates no duplicates; prints the count per rule and 20 random matches
-- [ ] Retries an overloaded server with backoff and saves raw responses to `data/osm/` (git-ignored)
+- [x] Applies the 4 spec rules (cuisine, brands, Portuguese/Peruvian + name, name only); words matched case- and accent-insensitively
+- [x] Re-running creates no duplicates; prints the count per rule and 20 random matches
+- [x] Retries an overloaded server with backoff and saves raw responses to `data/osm/` (git-ignored)
 
 **Verification:** `python3 scripts/import_osm.py --self-test` passes on `scripts/fixtures/overpass_sample.json`; a real run loads 1,000+ rows into local Supabase; you check the 20 sample matches.
 **Dependencies:** 1
@@ -47,9 +47,9 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Description:** `restaurants_in_bbox` SQL function; repository + `MapViewModel` load the visible area after the map stops moving and show one marker per restaurant.
 
 **Acceptance criteria:**
-- [ ] Moving the map loads that area's restaurants (max 500 per request) as chicken-pin markers
-- [ ] Zoomed out, markers gather into nest clusters (basket, two eggs, count); below the zoom threshold the "Zoome pour voir les restos" pill shows instead
-- [ ] A network error shows a French error message and keeps the old markers
+- [x] Moving the map loads that area's restaurants (max 500 per request) as chicken-pin markers
+- [x] Zoomed out, markers gather into nest clusters (basket, two eggs, count); below the zoom threshold the "Zoome pour voir les restos" pill shows instead
+- [x] A network error shows a French error message and keeps the old markers
 
 **Verification:** unit test of `MapViewModel` with a fake repository (load, error keeps old data); SQL test of the bbox function; manual: Paris and Lyon show markers.
 **Dependencies:** 2, 3
@@ -57,7 +57,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Scope:** M
 
 ### Checkpoint A
-- [ ] Tests pass, build clean
+- [x] Tests pass, build clean
 - [ ] The simulator shows the real imported dataset across France
 - [ ] You review the chicken rule results before we continue
 
@@ -102,7 +102,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Scope:** M
 
 ### Checkpoint B
-- [ ] Tests pass, build clean
+- [x] Tests pass, build clean
 - [ ] Sign in → rate → see the new average → edit → delete works in the simulator
 - [ ] Review with you
 
