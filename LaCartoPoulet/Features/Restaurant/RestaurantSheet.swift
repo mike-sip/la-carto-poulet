@@ -12,6 +12,7 @@ struct RestaurantSheet: View {
     @State private var ratings: [Rating]?
     @State private var failed = false
     @State private var showsForm = false
+    @State private var reporting: Rating?
 
     var body: some View {
         ScrollView {
@@ -44,6 +45,15 @@ struct RestaurantSheet: View {
                 AccountView(model: account)
             }
         }
+        .sheet(item: $reporting, onDismiss: { Task { await load() } }) { rating in
+            if account.isSignedIn {
+                ReportSheet(rating: rating, repository: repository).presentationDetents([.medium, .large])
+            } else {
+                AccountView(model: account)
+            }
+        }
+        // "is_mine" depends on who is signed in.
+        .onChange(of: account.isSignedIn) { Task { await load() } }
     }
 
     private var header: some View {
@@ -95,9 +105,11 @@ struct RestaurantSheet: View {
                 .foregroundStyle(.secondary)
                 .padding(.vertical, 12)
         } else {
-            let placeholders = (1...3).map { Rating(id: -$0, stars: 4, comment: "Les tenders sont croustillants, la sauce vaut le détour.", createdAt: .now, nickname: "Poulette") }
+            let placeholders = (1...3).map { Rating(id: -$0, stars: 4, comment: "Les tenders sont croustillants, la sauce vaut le détour.", createdAt: .now, nickname: "Poulette", userID: UUID(), isMine: true) }
             LazyVStack(alignment: .leading, spacing: 0) {
-                ForEach(ratings ?? placeholders) { RatingRow(rating: $0) }
+                ForEach(ratings ?? placeholders) { rating in
+                    RatingRow(rating: rating, onReport: rating.isMine ? nil : { reporting = rating })
+                }
             }
             .redacted(reason: ratings == nil ? .placeholder : [])
         }
@@ -123,13 +135,26 @@ struct RestaurantSheet: View {
 /// One comment: nickname, drumsticks, "il y a 2 jours", text.
 struct RatingRow: View {
     let rating: Rating
+    /// Nil on my own rating.
+    var onReport: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Divider()
-            ViewThatFits {
-                HStack { nickname; Spacer(); DrumstickRating(value: Double(rating.stars)) }
-                VStack(alignment: .leading) { nickname; DrumstickRating(value: Double(rating.stars)) }
+            HStack(alignment: .top) {
+                ViewThatFits {
+                    HStack { nickname; Spacer(); DrumstickRating(value: Double(rating.stars)) }
+                    VStack(alignment: .leading) { nickname; DrumstickRating(value: Double(rating.stars)) }
+                }
+                if let onReport {
+                    Menu {
+                        Button("Signaler", systemImage: "flag", action: onReport)
+                    } label: {
+                        Image(systemName: "ellipsis").frame(width: 44, height: 44)
+                    }
+                    .accessibilityHidden(true)  // reachable through the row's own action below
+                    .padding(.vertical, -12)
+                }
             }
             .padding(.top, 8)
             Text(rating.createdAt.formatted(Date.RelativeFormatStyle(presentation: .named, locale: Locale(identifier: "fr_FR"))))
@@ -142,6 +167,9 @@ struct RatingRow: View {
         .foregroundStyle(Color("Ink"))
         .padding(.bottom, 8)
         .accessibilityElement(children: .combine)
+        .accessibilityActions {
+            if let onReport { Button("Signaler", action: onReport) }
+        }
     }
 
     private var nickname: some View {

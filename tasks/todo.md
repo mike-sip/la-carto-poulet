@@ -114,9 +114,11 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 ## Task 8: Report a comment + auto-hide at 3 reports
 **Acceptance criteria:**
-- [ ] Signed-in user can report another user's comment once (DB primary key), with a reason
-- [ ] Trigger sets `hidden = true` at the 3rd report; the comment disappears for everyone
-- [ ] Can't report your own comment
+- [x] Signed-in user can report another user's comment once (DB primary key), with a reason
+- [x] Trigger sets `hidden = true` at the 3rd report; the comment disappears for everyone
+- [x] Can't report your own comment
+
+**Notes:** `rating_list` now returns `user_id` and `is_mine` (false when signed out), so the "…" menu only shows on other people's comments. Reporting twice is treated as done in the app. The author still sees a hidden rating in the form, with a note, so they can edit or delete it; it no longer counts in the average. Reports are write-only for users (nobody can read them through the API).
 
 **Verification:** SQL tests for the trigger and the double-report rejection; manual.
 **Dependencies:** 7

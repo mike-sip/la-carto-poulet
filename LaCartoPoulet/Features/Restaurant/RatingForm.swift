@@ -83,6 +83,11 @@ struct RatingForm: View {
                     Text("Alors, ce poulet ?")
                         .font(.display(28, relativeTo: .title))
                         .accessibilityAddTraits(.isHeader)
+                    if model.existing?.hidden == true {
+                        Label("Ton avis a été masqué après des signalements. Modifie-le ou supprime-le.",
+                              systemImage: "eye.slash")
+                            .font(.subheadline)
+                    }
                     picker
                     VStack(alignment: .trailing, spacing: 4) {
                         TextField("Ton commentaire (facultatif)", text: $model.comment, axis: .vertical)

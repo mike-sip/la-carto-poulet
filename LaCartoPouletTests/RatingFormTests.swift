@@ -18,6 +18,7 @@ final class FakeRatingRepository: RatingRepository, @unchecked Sendable {
         if let failure { throw failure }
         deleted.append(id)
     }
+    func report(ratingID: Int, reason: ReportReason) async throws {}
 }
 
 @MainActor struct RatingFormTests {

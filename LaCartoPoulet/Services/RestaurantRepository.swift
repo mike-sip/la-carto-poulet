@@ -25,12 +25,14 @@ protocol RatingRepository: Sendable {
     /// Adds my rating, or updates it when `id` is given.
     func save(id: Int?, restaurantID: Int, stars: Int, comment: String?) async throws
     func delete(id: Int) async throws
+    /// Reporting twice counts as done.
+    func report(ratingID: Int, reason: ReportReason) async throws
 }
 
 struct SupabaseRatingRepository: RatingRepository {
     func ratings(for restaurantID: Int) async throws -> [Rating] {
         try await supabase.from("rating_list")
-            .select("id, stars, comment, created_at, nickname")
+            .select("id, stars, comment, created_at, nickname, user_id, is_mine")
             .eq("restaurant_id", value: restaurantID)
             .order("created_at", ascending: false)
             .execute().value
@@ -39,7 +41,7 @@ struct SupabaseRatingRepository: RatingRepository {
     func myRating(for restaurantID: Int) async throws -> MyRating? {
         let userID = try await supabase.auth.session.user.id
         let mine: [MyRating] = try await supabase.from("ratings")
-            .select("id, stars, comment")
+            .select("id, stars, comment, hidden")
             .eq("restaurant_id", value: restaurantID)
             .eq("user_id", value: userID)
             .execute().value
@@ -60,5 +62,15 @@ struct SupabaseRatingRepository: RatingRepository {
 
     func delete(id: Int) async throws {
         try await supabase.from("ratings").delete().eq("id", value: id).execute()
+    }
+
+    func report(ratingID: Int, reason: ReportReason) async throws {
+        do {
+            let userID = try await supabase.auth.session.user.id
+            try await supabase.from("reports")
+                .insert(["rating_id": AnyJSON.integer(ratingID), "reporter_id": .string(userID.uuidString),
+                         "reason": .string(reason.rawValue)])
+                .execute()
+        } catch let error as PostgrestError where error.code == "23505" {}
     }
 }
