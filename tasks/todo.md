@@ -140,9 +140,11 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 ## Task 10: Delete my account
 **Acceptance criteria:**
-- [ ] "Supprimer mon compte" in Account, with a confirmation dialog
-- [ ] `delete_my_account()` removes the user, their profile, ratings, reports and blocks
-- [ ] The app returns to the signed-out state
+- [x] "Supprimer mon compte" in Account, with a confirmation dialog
+- [x] `delete_my_account()` removes the user, their profile, ratings, reports and blocks
+- [x] The app returns to the signed-out state
+
+**Notes:** `delete_my_account()` is security definer, deletes only `auth.uid()` from `auth.users`, and the existing cascades handle everything else. Only authenticated users can execute it. The app then signs out locally; the server answers 403 because the session is already gone, and supabase-swift ignores that.
 
 **Verification:** SQL test (all rows gone after the call; a user can only delete themselves); manual.
 **Dependencies:** 7

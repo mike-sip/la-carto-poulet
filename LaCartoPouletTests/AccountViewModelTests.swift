@@ -22,6 +22,12 @@ final class FakeAuthService: AuthService, @unchecked Sendable {
         savedNickname = nickname
     }
     func signOut() async throws { signedInEmail = nil }
+    var deleted = false
+    func deleteAccount() async throws {
+        if let failure { throw failure }
+        deleted = true
+        signedInEmail = nil
+    }
     var blocks: [BlockedUser] = []
     func blockedUsers() async throws -> [BlockedUser] { blocks }
     func block(_ userID: UUID) async throws {
@@ -126,5 +132,17 @@ final class FakeAuthService: AuthService, @unchecked Sendable {
         let model = AccountViewModel(auth: auth)
         #expect(await model.block(UUID()) == false)
         #expect(model.error?.hasPrefix("Pas de connexion") == true)
+    }
+
+    @Test func deleteAccountSignsOut() async {
+        let auth = FakeAuthService()
+        auth.signedInEmail = "crete@example.com"
+        let model = AccountViewModel(auth: auth)
+        auth.failure = .offline
+        await model.deleteAccount()
+        #expect(model.isSignedIn && !auth.deleted)
+        auth.failure = nil
+        await model.deleteAccount()
+        #expect(!model.isSignedIn && model.email.isEmpty && auth.deleted)
     }
 }

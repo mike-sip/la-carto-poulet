@@ -80,11 +80,22 @@ import Observation
     func signOut() async {
         await run {
             try await auth.signOut()
-            email = ""
-            nickname = ""
-            blocked = []
-            step = .email
+            reset()
         }
+    }
+
+    func deleteAccount() async {
+        await run {
+            try await auth.deleteAccount()
+            reset()
+        }
+    }
+
+    private func reset() {
+        email = ""
+        nickname = ""
+        blocked = []
+        step = .email
     }
 
     func loadBlocks() async {

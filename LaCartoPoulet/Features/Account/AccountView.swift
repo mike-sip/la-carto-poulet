@@ -4,6 +4,7 @@ import SwiftUI
 struct AccountView: View {
     @Bindable var model: AccountViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var confirmsDelete = false
 
     var body: some View {
         NavigationStack {
@@ -22,6 +23,10 @@ struct AccountView: View {
                         Button("Se déconnecter") { Task { await model.signOut() } }
                             .foregroundStyle(Color("Feet"))
                             .frame(minHeight: 44)
+                        Button("Supprimer mon compte", role: .destructive) { confirmsDelete = true }
+                            .foregroundStyle(Color("Comb"))
+                            .frame(minHeight: 44)
+                            .disabled(model.isWorking)
                     } else {
                         SignInView(model: model)
                     }
@@ -29,6 +34,11 @@ struct AccountView: View {
                 .padding(16)
             }
             .background(Color("Feather"))
+            .confirmationDialog("Supprimer ton compte ?", isPresented: $confirmsDelete, titleVisibility: .visible) {
+                Button("Supprimer mon compte", role: .destructive) { Task { await model.deleteAccount() } }
+            } message: {
+                Text("Ton pseudo, tes avis, tes signalements et tes blocages seront effacés. C'est définitif.")
+            }
             .task(id: model.isSignedIn) { await model.loadBlocks() }
             .navigationTitle("Mon compte")
             .navigationBarTitleDisplayMode(.inline)

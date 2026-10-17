@@ -23,6 +23,8 @@ protocol AuthService: Sendable {
     func nickname() async throws -> String?
     func setNickname(_ nickname: String) async throws
     func signOut() async throws
+    /// Deletes me, my ratings, reports and blocks, then signs out.
+    func deleteAccount() async throws
     func blockedUsers() async throws -> [BlockedUser]
     func block(_ userID: UUID) async throws
     func unblock(_ userID: UUID) async throws
@@ -60,6 +62,14 @@ struct SupabaseAuthService: AuthService {
 
     func signOut() async throws {
         try await supabase.auth.signOut()
+    }
+
+    func deleteAccount() async throws {
+        try await mapped {
+            try await supabase.rpc("delete_my_account").execute()
+            // The account is gone either way; this clears the Keychain session before its server call can fail.
+            try? await supabase.auth.signOut(scope: .local)
+        }
     }
 
     func blockedUsers() async throws -> [BlockedUser] {
