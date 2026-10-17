@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Carto'Poulet — maquettes</title>
+<style>
+@font-face { font-family: "Shrikhand"; src: url("fonts/Shrikhand-Regular.ttf"); }
+:root {
+  --yolk: #FFC425; --comb: #C1121F; --feet: #2448C9; --crispy: #8A4B0F;
+  --ink: #14213D; --feather: #FFFFFF; --mist: #5A6478; --line: #E4E7EE; --map: #EEF1EC;
+  --bone: #E9DFCF;
+}
+.dark {
+  --comb: #FF6B78; --feet: #7FA2FF; --crispy: #E2A04A;
+  --ink: #FFFFFF; --feather: #14213D; --mist: #AEB7CA; --line: #2A3A5E; --map: #1B2A47; --bone: #34466E;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #FFFFFF; color: #14213D; font: 16px/1.5 -apple-system, "SF Pro Text", system-ui, sans-serif; }
+.page { max-width: 1240px; margin: 0 auto; padding: 48px 16px 80px; }
+.display { font-family: "Shrikhand", serif; font-weight: 400; }
+header.intro { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); align-items: center; }
+header.intro img { width: min(560px, 100%); }
+header.intro p { max-width: 60ch; margin: 0; color: #5A6478; }
+h2 { font-family: "Shrikhand", serif; font-weight: 400; font-size: 32px; line-height: 1.2; margin: 64px 0 8px; }
+h2 + p { margin: 0 0 24px; color: #5A6478; max-width: 64ch; }
+
+/* identity */
+.swatches { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.swatch { border-radius: 14px; padding: 16px; min-height: 120px; display: flex; flex-direction: column; justify-content: flex-end; }
+.swatch b { font-size: 17px; } .swatch span { font-size: 13px; opacity: .85; }
+.type { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.type div { border: 2px solid var(--line); border-radius: 14px; padding: 20px; }
+.icons { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; }
+.icons img { border-radius: 22%; }
+
+/* phones */
+.phones { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+figure { margin: 0; width: 330px; max-width: 100%; }
+figcaption { margin-top: 12px; font-size: 15px; color: #5A6478; }
+figcaption b { color: #14213D; display: block; }
+.phone { position: relative; width: 100%; aspect-ratio: 330 / 690; border-radius: 44px; border: 10px solid #14213D;
+  overflow: hidden; background: var(--feather); color: var(--ink); display: flex; flex-direction: column; }
+.status { height: 34px; flex: none; display: flex; justify-content: space-between; padding: 8px 22px 0; font-size: 13px; font-weight: 600; }
+
+/* fake Apple map */
+.map { position: absolute; inset: 0; background: var(--map); }
+.map svg.streets { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pin { position: absolute; width: 56px; transform: translate(-50%, -100%); }
+.pin.big { width: 64px; }
+.nest { position: absolute; transform: translate(-50%, -50%); width: 64px; height: 44px; }
+.nest svg { width: 100%; height: 100%; }
+.nest b { position: absolute; inset: 0; display: grid; place-items: center; padding-top: 24px; font-size: 14px; font-weight: 700; color: #FFFFFF; }
+.topbar { position: absolute; top: 40px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; }
+.round { width: 44px; height: 44px; border-radius: 50%; background: var(--feather); color: var(--ink); border: 0; display: grid; place-items: center;
+  box-shadow: 0 1px 4px rgba(20,33,61,.25); font-size: 20px; }
+.brand { background: var(--yolk); color: #14213D; border-radius: 22px; padding: 6px 14px 6px 6px; display: flex; gap: 6px; align-items: center; font-size: 17px; box-shadow: 0 1px 4px rgba(20,33,61,.25); }
+.brand img { width: 32px; }
+.locate { position: absolute; right: 12px; bottom: 28px; }
+.pill { position: absolute; left: 50%; transform: translateX(-50%); bottom: 28px; background: var(--ink); color: var(--feather);
+  border-radius: 999px; padding: 10px 16px; font-size: 14px; font-weight: 600; white-space: nowrap; }
+
+/* sheet */
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; top: var(--top, 38%); background: var(--feather); border-radius: 22px 22px 0 0;
+  box-shadow: 0 -2px 12px rgba(20,33,61,.18); display: flex; flex-direction: column; overflow: hidden; }
+.sheet.full { --top: 34px; }
+.grab { width: 36px; height: 5px; border-radius: 3px; background: rgba(20,33,61,.25); margin: 6px auto 0; }
+.head { background: var(--yolk); color: #14213D; padding: 10px 16px 16px; }
+.head h3 { font-family: "Shrikhand", serif; font-weight: 400; font-size: 26px; line-height: 1.15; margin: 4px 0 2px; }
+.head p { margin: 0; font-size: 14px; }
+.score { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.score .num { font-family: "Shrikhand", serif; font-size: 24px; line-height: 1; }
+.score small { font-size: 14px; }
+.actions { display: flex; gap: 8px; padding: 12px 16px; }
+.btn { flex: 1; min-height: 44px; border-radius: 12px; border: 0; font: 600 16px/1 inherit; font-family: inherit; display: grid; place-items: center; }
+.btn.primary { background: var(--comb); color: #FFFFFF; }
+.dark .btn.primary { color: #14213D; }
+.btn.secondary { background: transparent; color: var(--feet); border: 2px solid var(--feet); }
+.list { padding: 0 16px; overflow: hidden; }
+.review { padding: 12px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.review .who { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.review .who b { font-size: 15px; }
+.review .meta { font-size: 13px; color: var(--mist); }
+.review p { margin: 4px 0 0; }
+
+/* drumsticks */
+.sticks { display: inline-flex; gap: 2px; color: var(--crispy); }
+.sticks svg { width: 20px; height: 20px; }
+.sticks.lg svg { width: 46px; height: 46px; }
+.sticks .off { color: var(--bone); }
+.head .sticks { color: #8A4B0F; } .head .sticks .off { color: rgba(138,75,15,.28); }
+
+/* form */
+.screen { padding: 8px 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.screen h3 { font-family: "Shrikhand", serif; font-weight: 400; font-size: 26px; line-height: 1.15; margin: 8px 0 0; }
+.nav { display: flex; justify-content: space-between; padding: 4px 16px; font-size: 16px; color: var(--feet); }
+.verdict { text-align: center; }
+.verdict .word { font-family: "Shrikhand", serif; font-size: 28px; color: var(--crispy); margin-top: 6px; }
+.verdict .hint { font-size: 13px; color: var(--mist); }
+.field { border: 2px solid var(--line); border-radius: 12px; padding: 12px; font-size: 15px; color: var(--mist); min-height: 44px; }
+.field.focus { border-color: var(--feet); color: var(--ink); }
+.field.tall { min-height: 120px; }
+.count { text-align: right; font-size: 13px; color: var(--mist); margin-top: -8px; }
+.code { display: flex; gap: 8px; } .code span { flex: 1; aspect-ratio: 3/4; border: 2px solid var(--line); border-radius: 10px; display: grid; place-items: center; font: 600 22px/1 inherit; font-family: inherit; }
+.label { font-size: 14px; font-weight: 600; }
+.err { color: var(--comb); font-size: 14px; margin-top: -6px; }
+.spacer { flex: 1; }
+
+.banner { position: absolute; top: 96px; left: 12px; right: 12px; background: var(--ink); color: var(--feather); border-radius: 14px; padding: 12px 14px; font-size: 14px; display: flex; gap: 10px; align-items: center; }
+.banner b { color: var(--yolk); }
+.empty { position: absolute; left: 16px; right: 16px; bottom: 28px; background: var(--feather); border-radius: 18px; padding: 16px; display: flex; gap: 12px; align-items: center; box-shadow: 0 1px 6px rgba(20,33,61,.25); }
+.empty img { width: 52px; flex: none; transform: rotate(-12deg); }
+.empty p { margin: 0; font-size: 15px; } .empty b { font-family: "Shrikhand", serif; font-weight: 400; font-size: 19px; display: block; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hop { animation: hop 900ms cubic-bezier(.3,1.6,.5,1) 600ms 2; }
+  @keyframes hop { 0%,100% { transform: translate(-50%,-100%); } 40% { transform: translate(-50%,-128%) rotate(-8deg); } 70% { transform: translate(-50%,-100%) scaleY(.92); } }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="dr" viewBox="0 0 24 24">
+    <ellipse cx="14.6" cy="9.4" rx="7.2" ry="5.8" transform="rotate(-45 14.6 9.4)" fill="currentColor"/>
+    <path d="M10.2 13.8 L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="4.3" cy="17.4" r="2" fill="currentColor"/><circle cx="6.6" cy="19.7" r="2" fill="currentColor"/>
+  </symbol>
+  <symbol id="half" viewBox="0 0 24 24">
+    <clipPath id="lefthalf"><rect width="12" height="24"/></clipPath>
+    <use href="#dr" class="off" style="color:var(--bone)"/>
+    <use href="#dr" clip-path="url(#lefthalf)"/>
+  </symbol>
+  <symbol id="streets" viewBox="0 0 330 690">
+    <g fill="none" stroke="#FFFFFF" stroke-linecap="round">
+      <path d="M-10 120 C80 140 160 90 340 150" stroke-width="14"/>
+      <path d="M60 -10 C80 200 40 400 90 700" stroke-width="10"/>
+      <path d="M-10 420 C120 380 220 470 340 430" stroke-width="16"/>
+      <path d="M220 -10 C210 180 260 330 230 700" stroke-width="9"/>
+      <path d="M-10 280 L340 300 M-10 560 L340 590 M150 -10 L170 700" stroke-width="6"/>
+    </g>
+    <path d="M250 180 C290 170 320 200 330 240 L330 300 C300 290 260 250 250 180 Z" fill="#CFE5C8"/>
+    <path d="M-10 610 C60 590 120 640 180 700 L-10 700 Z" fill="#BFD9F2"/>
+  </symbol>
+  <symbol id="nest" viewBox="0 0 64 44">
+    <ellipse cx="22" cy="18" rx="9" ry="11" fill="#FFF7E0" stroke="#14213D" stroke-width="2"/>
+    <ellipse cx="42" cy="18" rx="9" ry="11" fill="#FFF7E0" stroke="#14213D" stroke-width="2"/>
+    <path d="M4 22 C8 44 56 44 60 22 Z" fill="#C98A3D" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M10 28 C24 32 40 32 54 28 M14 34 C26 37 38 37 50 34" stroke="#8A4B0F" stroke-width="2" fill="none"/>
+  </symbol>
+</svg>
+
+<main class="page">
+  <header class="intro">
+    <img src="logo.svg" alt="La Carto'Poulet">
+    <p>Le Pays du Poulet. Chaque resto est un poulet de Bresse planté sur la carte : crête rouge, plumes blanches, pattes bleues. La patte, c'est la pointe de l'épingle.</p>
+  </header>
+
+  <h2>Les couleurs</h2>
+  <p>Tirées du poulet de Bresse et du jaune d'œuf. Le jaune porte la marque, le rouge porte l'action, le bleu montre le chemin.</p>
+  <div class="swatches">
+    <div class="swatch" style="background:#FFC425"><b>Jaune d'œuf</b><span>#FFC425 · en-têtes, icône</span></div>
+    <div class="swatch" style="background:#C1121F;color:#fff"><b>Crête</b><span>#C1121F · boutons d'action</span></div>
+    <div class="swatch" style="background:#2448C9;color:#fff"><b>Pattes de Bresse</b><span>#2448C9 · liens, itinéraire</span></div>
+    <div class="swatch" style="background:#8A4B0F;color:#fff"><b>Croustillant</b><span>#8A4B0F · pilons de note</span></div>
+    <div class="swatch" style="background:#14213D;color:#fff"><b>Encre</b><span>#14213D · texte</span></div>
+    <div class="swatch" style="background:#fff;border:2px solid #E4E7EE"><b>Plume</b><span>#FFFFFF · fond</span></div>
+  </div>
+
+  <h2>Les lettres</h2>
+  <p>Shrikhand pour les noms et les titres, comme une enseigne de rôtisserie peinte à la main. SF Pro, la police d'iOS, pour tout le reste.</p>
+  <div class="type">
+    <div><span class="display" style="font-size:34px;line-height:1.1">Le Poulet Doré</span><br><span style="color:#5A6478;font-size:14px">Shrikhand, noms de restos et titres</span></div>
+    <div><span style="font-size:17px">Fast food à Lyon 7e. Les tenders sont croustillants et la sauce maison vaut le détour.</span><br><span style="color:#5A6478;font-size:14px">SF Pro, texte, boutons, avis</span></div>
+  </div>
+
+  <h2>Icône de l'app</h2>
+  <p>Le poulet-épingle sur fond jaune d'œuf. Il reste lisible même en tout petit.</p>
+  <div class="icons">
+    <img src="app-icon.svg" width="120" height="120" alt="Icône 120 px">
+    <img src="app-icon.svg" width="60" height="60" alt="Icône 60 px">
+    <img src="app-icon.svg" width="40" height="40" alt="Icône 40 px">
+  </div>
+
+  <h2>Les écrans</h2>
+  <p>Toute la folie est dans les poulets sur la carte et les mots. Le reste est calme, pour qu'on trouve son resto en trois secondes.</p>
+  <div class="phones">
+
+    <figure>
+      <div class="phone" role="img" aria-label="Écran carte">
+        <div class="map"><svg class="streets"><use href="#streets"/></svg></div>
+        <img class="pin" src="logo-symbol.svg" alt="" style="left:30%;top:30%">
+        <img class="pin hop" src="logo-symbol.svg" alt="" style="left:64%;top:45%">
+        <img class="pin" src="logo-symbol.svg" alt="" style="left:40%;top:62%">
+        <div class="nest" style="left:74%;top:22%"><svg><use href="#nest"/></svg><b>12</b></div>
+        <div class="nest" style="left:22%;top:80%"><svg><use href="#nest"/></svg><b>4</b></div>
+        <div class="topbar"><span class="brand display"><img src="logo-symbol.svg" alt="">La Carto'Poulet</span><button class="round" aria-label="Mon compte">👤</button></div>
+        <button class="round locate" aria-label="Ma position">➤</button>
+      </div>
+      <figcaption><b>Carte</b>Un poulet par resto. Dézoomé, ils rentrent au nid, avec le nombre de restos dedans. Un poulet sautille quand tu viens de publier un avis.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone">
+        <div class="map"><svg class="streets"><use href="#streets"/></svg></div>
+        <img class="pin big" src="logo-symbol.svg" alt="" style="left:50%;top:30%">
+        <div class="sheet">
+          <div class="head"><div class="grab"></div>
+            <h3>Le Poulet Doré</h3><p>Fast food à Lyon 7e</p>
+            <div class="score"><span class="num">4,3</span>
+              <span class="sticks" aria-label="4,3 sur 5"><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#half"/></svg></span>
+              <small>12 avis</small></div>
+          </div>
+          <div class="actions"><button class="btn primary">Donner mon avis</button><button class="btn secondary">Itinéraire</button></div>
+          <div class="list">
+            <div class="review"><div class="who"><b>Crête-de-Feu</b><span class="sticks"><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg></span></div>
+              <div class="meta">il y a 2 jours</div><p>Les tenders sont croustillants, la sauce maison vaut le détour.</p></div>
+            <div class="review"><div class="who"><b>Poulette69</b><span class="sticks"><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg class="off"><use href="#dr"/></svg><svg class="off"><use href="#dr"/></svg></span></div>
+              <div class="meta">il y a 1 semaine</div><p>Bon mais un peu d'attente le samedi soir.</p></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Fiche resto</b>L'en-tête jaune d'œuf porte le nom en grand et la note en pilons, avec le chiffre à côté.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●●</span></div>
+        <div class="nav"><span>Annuler</span><b style="color:var(--ink)">Le Poulet Doré</b><span style="opacity:0">.</span></div>
+        <div class="screen">
+          <h3>Alors, ce poulet ?</h3>
+          <div class="verdict">
+            <span class="sticks lg" role="slider" aria-label="Note" aria-valuemin="1" aria-valuemax="5" aria-valuenow="4" aria-valuetext="4 sur 5, Croustillant"><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg class="off"><use href="#dr"/></svg></span>
+            <div class="word">Croustillant !</div>
+            <div class="hint">1 Sec comme un vieux pneu, 2 Bof, 3 Bon poulet, 4 Croustillant, 5 Cocorico</div>
+          </div>
+          <div class="field tall focus">Les tenders sont croustillants, la sauce maison vaut le détour.</div>
+          <div class="count">62/1000</div>
+          <div class="spacer"></div>
+          <button class="btn primary" style="flex:none">Publier mon avis</button>
+        </div>
+      </div>
+      <figcaption><b>Donner mon avis</b>Chaque note a son mot, pour que 3 et 4 veuillent dire la même chose pour tout le monde.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●●</span></div>
+        <div class="nav"><span>Fermer</span><span></span><span></span></div>
+        <div class="screen">
+          <img src="logo-symbol.svg" alt="" style="width:72px">
+          <h3>Rejoins le poulailler</h3>
+          <div class="label">Ton code à 6 chiffres</div>
+          <div class="code"><span>4</span><span>8</span><span>1</span><span>9</span><span></span><span></span></div>
+          <div class="label">Choisis ton pseudo</div>
+          <div class="field focus">Crête-de-Feu</div>
+          <div class="err">Ce pseudo est déjà pris. Essaie Crête-de-Feu-2.</div>
+          <div class="hint" style="font-size:13px;color:var(--mist)">Ton e-mail reste secret. Seul ton pseudo apparaît sur tes avis.</div>
+          <div class="spacer"></div>
+          <button class="btn primary" style="flex:none">Entrer dans le poulailler</button>
+        </div>
+      </div>
+      <figcaption><b>Connexion</b>E-mail, code reçu par mail, puis pseudo la première fois. L'erreur dit quoi faire.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone">
+        <div class="map"><svg class="streets"><use href="#streets"/></svg></div>
+        <div class="topbar"><span class="brand display"><img src="logo-symbol.svg" alt="">La Carto'Poulet</span><button class="round" aria-label="Mon compte">👤</button></div>
+        <div class="banner"><span>📡</span><span><b>Pas de connexion.</b> Les poulets déjà affichés restent là. Vérifie ton réseau, on réessaie tout seuls.</span></div>
+        <div class="empty"><img src="logo-symbol.svg" alt=""><p><b>Pas un poulet à l'horizon</b>Déplace la carte ou dézoome pour trouver un resto.</p></div>
+      </div>
+      <figcaption><b>Vide et hors ligne</b>Jamais d'écran blanc : on dit ce qui se passe et quoi faire.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone dark">
+        <div class="map"><svg class="streets" style="opacity:.12"><use href="#streets"/></svg></div>
+        <img class="pin big" src="logo-symbol.svg" alt="" style="left:50%;top:30%">
+        <div class="sheet">
+          <div class="head"><div class="grab"></div>
+            <h3>Frango do Porto</h3><p>Restaurant portugais à Paris 11e</p>
+            <div class="score"><span class="num">3,8</span>
+              <span class="sticks" aria-label="3,8 sur 5"><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg class="off"><use href="#dr"/></svg></span>
+              <small>31 avis</small></div>
+          </div>
+          <div class="actions"><button class="btn primary">Donner mon avis</button><button class="btn secondary">Itinéraire</button></div>
+          <div class="list">
+            <div class="review"><div class="who"><b>LeCoqDuQuartier</b><span class="sticks"><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg><use href="#dr"/></svg><svg class="off"><use href="#dr"/></svg></span></div>
+              <div class="meta">hier</div><p>Le frango piri-piri est parfait, les frites un peu molles.</p></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Mode sombre</b>Le jaune d'œuf reste, le reste passe à l'encre.</figcaption>
+    </figure>
+
+  </div>
+</main>
+</body>
+</html>

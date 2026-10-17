@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="La Carto'Poulet">
+  <g stroke="#14213D" stroke-width="16" stroke-linejoin="round" stroke-linecap="round">
+    <circle cx="214" cy="112" r="32" fill="#C1121F"/>
+    <circle cx="256" cy="92" r="38" fill="#C1121F"/>
+    <circle cx="298" cy="112" r="32" fill="#C1121F"/>
+    <path d="M256 448 C206 390 128 322 128 236 A128 128 0 1 1 384 236 C384 322 306 390 256 448 Z" fill="#FFFFFF"/>
+    <path d="M370 212 L448 238 L370 264 Z" fill="#FFC425"/>
+    <path d="M362 268 C380 286 380 314 360 326 C346 310 344 286 362 268 Z" fill="#C1121F"/>
+    <path d="M206 250 C170 284 176 340 236 344 C224 334 220 322 222 312 C206 310 196 298 196 286 C186 280 184 266 206 250 Z" fill="#FFFFFF" stroke-width="12"/>
+    <path d="M256 448 L256 470 M256 470 L222 498 M256 470 L256 506 M256 470 L290 498" stroke="#2448C9" stroke-width="18" fill="none"/>
+  </g>
+  <circle cx="300" cy="206" r="17" fill="#14213D"/>
+  <circle cx="306" cy="200" r="5" fill="#FFFFFF"/>
+</svg>
