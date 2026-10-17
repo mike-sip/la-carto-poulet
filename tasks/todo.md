@@ -95,10 +95,12 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Description:** RLS write policies on `ratings`. In the sheet, a signed-in user rates 1–5 drumsticks (one VoiceOver-adjustable control) with an optional comment (≤ 1000 chars), then edits or deletes it. Signed-out users are sent to sign-in.
 
 **Acceptance criteria:**
-- [ ] One rating per user per restaurant (DB unique constraint); a second save updates it
-- [ ] A user can't change or delete someone else's rating (RLS)
-- [ ] Average and count update after saving
-- [ ] Each drumstick value shows its rating word ("Croustillant"…); after "Publier" the marker hops twice, not at all with Reduce Motion
+- [x] One rating per user per restaurant (DB unique constraint); a second save updates it
+- [x] A user can't change or delete someone else's rating (RLS)
+- [x] Average and count update after saving
+- [x] Each drumstick value shows its rating word ("Croustillant"…); after "Publier" the marker hops twice, not at all with Reduce Motion
+
+**Notes:** Column grants keep `hidden` out of users' reach (only `stars`/`comment` are updatable). The form edits by id when a rating exists, so no upsert. After saving, the sheet reloads its ratings rather than updating optimistically; the form keeps a spinner on "Publier" and shows errors under it. The repository stayed in `Services/RestaurantRepository.swift`. Open for Task 8: a user whose rating got hidden sees an empty form and a generic error when publishing again (unique constraint).
 
 **Verification:** SQL tests (other user's rating untouchable; 0 or 6 rejected; 1001 chars rejected); unit tests of the form validation; manual loop.
 **Dependencies:** 5, 6

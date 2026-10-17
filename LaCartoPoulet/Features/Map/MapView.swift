@@ -15,6 +15,9 @@ struct MapView: View {
     @State private var loadTask: Task<Void, Never>?
     @State private var selected: Restaurant?
     @State private var showsAccount = false
+    /// Hops per restaurant id; bumping one makes that marker hop twice.
+    @State private var hops: [Int: Int] = [:]
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AccountViewModel.self) private var account
 
     var body: some View {
@@ -30,6 +33,16 @@ struct MapView: View {
                                 .accessibilityLabel(cluster.restaurants[0].name)
                                 .accessibilityAddTraits(.isButton)
                                 .onTapGesture { selected = cluster.restaurants[0] }
+                                .keyframeAnimator(initialValue: 0.0, trigger: hops[cluster.restaurants[0].id, default: 0]) { pin, lift in
+                                    pin.offset(y: lift)
+                                } keyframes: { _ in
+                                    KeyframeTrack {
+                                        SpringKeyframe(-18, duration: 0.2)
+                                        SpringKeyframe(0, duration: 0.25)
+                                        SpringKeyframe(-18, duration: 0.2)
+                                        SpringKeyframe(0, duration: 0.25)
+                                    }
+                                }
                         }
                         .annotationTitles(.hidden)
                     } else {
@@ -87,7 +100,9 @@ struct MapView: View {
             }
         }
         .sheet(item: $selected) { restaurant in
-            RestaurantSheet(restaurant: restaurant)
+            RestaurantSheet(restaurant: restaurant) {
+                if !reduceMotion { hops[restaurant.id, default: 0] += 1 }
+            }
                 .presentationDetents([.medium, .large])
         }
         .task {

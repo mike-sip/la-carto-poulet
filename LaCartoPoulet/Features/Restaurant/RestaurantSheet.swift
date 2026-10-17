@@ -5,25 +5,45 @@ import SwiftUI
 struct RestaurantSheet: View {
     let restaurant: Restaurant
     var repository: RatingRepository = SupabaseRatingRepository()
+    /// Called after I publish my rating, so the map can make the marker hop.
+    var onPublished: () -> Void = {}
 
+    @Environment(AccountViewModel.self) private var account
     @State private var ratings: [Rating]?
     @State private var failed = false
+    @State private var showsForm = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 header
-                Button("Itinéraire", action: openDirections)
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(Color("Feet"))
-                    .frame(maxWidth: .infinity, minHeight: 44)
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color("Feet"), lineWidth: 2))
-                    .padding(16)
+                VStack(spacing: 8) {
+                    Button("Donner mon avis") { showsForm = true }
+                        .buttonStyle(PrimaryButtonStyle())
+                    Button("Itinéraire", action: openDirections)
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(Color("Feet"))
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color("Feet"), lineWidth: 2))
+                }
+                .padding(16)
                 list.padding(.horizontal, 16)
             }
         }
         .background(Color("Feather"))
         .task { await load() }
+        .sheet(isPresented: $showsForm) {
+            // Signed out, the same sheet signs in first, then turns into the form.
+            if account.isSignedIn {
+                RatingForm(restaurant: restaurant,
+                           model: RatingFormModel(restaurantID: restaurant.id, repository: repository)) { published in
+                    if published { onPublished() }
+                    Task { await load() }
+                }
+            } else {
+                AccountView(model: account)
+            }
+        }
     }
 
     private var header: some View {
@@ -134,5 +154,6 @@ struct RatingRow: View {
         RestaurantSheet(restaurant: Restaurant(id: 1, name: "Le Poulet Doré", kind: "fast_food", address: nil,
                                                city: "Lyon 7e", lat: 45.75, lng: 4.84))
             .presentationDetents([.medium, .large])
+            .environment(AccountViewModel())
     }
 }

@@ -13,3 +13,10 @@ struct Rating: Decodable, Identifiable, Equatable {
         case createdAt = "created_at"
     }
 }
+
+/// The signed-in user's own rating for one restaurant, to prefill the form.
+struct MyRating: Decodable, Equatable {
+    let id: Int
+    let stars: Int
+    let comment: String?
+}

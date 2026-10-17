@@ -20,6 +20,11 @@ struct SupabaseRestaurantRepository: RestaurantRepository {
 protocol RatingRepository: Sendable {
     /// Visible ratings, newest first.
     func ratings(for restaurantID: Int) async throws -> [Rating]
+    /// The signed-in user's rating here, nil if they haven't rated it.
+    func myRating(for restaurantID: Int) async throws -> MyRating?
+    /// Adds my rating, or updates it when `id` is given.
+    func save(id: Int?, restaurantID: Int, stars: Int, comment: String?) async throws
+    func delete(id: Int) async throws
 }
 
 struct SupabaseRatingRepository: RatingRepository {
@@ -29,5 +34,31 @@ struct SupabaseRatingRepository: RatingRepository {
             .eq("restaurant_id", value: restaurantID)
             .order("created_at", ascending: false)
             .execute().value
+    }
+
+    func myRating(for restaurantID: Int) async throws -> MyRating? {
+        let userID = try await supabase.auth.session.user.id
+        let mine: [MyRating] = try await supabase.from("ratings")
+            .select("id, stars, comment")
+            .eq("restaurant_id", value: restaurantID)
+            .eq("user_id", value: userID)
+            .execute().value
+        return mine.first
+    }
+
+    func save(id: Int?, restaurantID: Int, stars: Int, comment: String?) async throws {
+        // AnyJSON so a removed comment is sent as null instead of being left out.
+        var fields: [String: AnyJSON] = ["stars": .integer(stars), "comment": comment.map(AnyJSON.string) ?? .null]
+        if let id {
+            try await supabase.from("ratings").update(fields).eq("id", value: id).execute()
+        } else {
+            fields["restaurant_id"] = .integer(restaurantID)
+            fields["user_id"] = .string(try await supabase.auth.session.user.id.uuidString)
+            try await supabase.from("ratings").insert(fields).execute()
+        }
+    }
+
+    func delete(id: Int) async throws {
+        try await supabase.from("ratings").delete().eq("id", value: id).execute()
     }
 }
