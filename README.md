@@ -9,7 +9,7 @@ App iPhone qui recense les restos spécialisés dans le poulet en France métrop
 - Signaler un commentaire (masqué automatiquement à 3 signalements), bloquer un utilisateur
 - Suppression du compte et de toutes ses données depuis l'app
 
-Le cahier des charges complet est dans [SPEC.md](SPEC.md), le suivi des tâches dans [tasks/todo.md](tasks/todo.md).
+Le cahier des charges complet est dans [SPEC.md](SPEC.md), le suivi des tâches dans [tasks/todo.md](tasks/todo.md), la modération des commentaires dans [supabase/MODERATION.md](supabase/MODERATION.md).
 
 ## Stack
 
