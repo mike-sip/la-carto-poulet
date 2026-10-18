@@ -39,7 +39,7 @@
 ## TestFlight
 
 - **Description du test :** Teste la carte autour de toi, la fiche d'un resto, et note un resto (connexion avec n'importe quel email).
-- **Email de retour :** mikesip@hotmail.fr
+- **Email de retour :** contact@lacartopoulet.mikesip.fr
 
 ## Notes pour la review Apple
 

@@ -43,7 +43,7 @@ Tes données sont gardées tant que ton compte existe. Tu peux supprimer ton com
 
 ## Tes droits
 
-Conformément au RGPD, tu peux demander à consulter, corriger ou supprimer tes données en écrivant à **mikesip@hotmail.fr**. Tu peux aussi saisir la CNIL (www.cnil.fr).
+Conformément au RGPD, tu peux demander à consulter, corriger ou supprimer tes données en écrivant à **contact@lacartopoulet.mikesip.fr**. Tu peux aussi saisir la CNIL (www.cnil.fr).
 
 ## Données des restos
 
