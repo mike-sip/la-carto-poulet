@@ -25,6 +25,10 @@
 >
 > Données des restos © les contributeurs d'OpenStreetMap.
 
+## Captures d'écran
+
+`design/screenshots/` : 4 captures iPhone 6,9" (1320 × 2868), à déposer dans l'emplacement « iPhone 6,9" ». Le resto « Le Poulet Doré » et ses avis sont fictifs : ils ont été créés sur la base locale pour les captures.
+
 ## Confidentialité de l'app (questionnaire)
 
 « Collectez-vous des données ? » → **Oui**. Rien n'est utilisé pour le pistage.
