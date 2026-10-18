@@ -72,6 +72,9 @@ struct RestaurantSheet: View {
                 .font(.display(26, relativeTo: .title2))
                 .accessibilityAddTraits(.isHeader)
             Text(subtitle).font(.subheadline)
+            if let address = restaurant.address {
+                Text(address).font(.subheadline)
+            }
             if let stats {
                 let average = stats.avgStars
                 let score = HStack(spacing: 8) {
