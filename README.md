@@ -38,6 +38,19 @@ Les réponses Overpass sont gardées en cache dans `data/osm/`. `--refresh` les 
 
 Les codes de connexion envoyés en local s'affichent dans Mailpit : http://127.0.0.1:54324.
 
+## Mettre à jour les restos (chaque mois)
+
+À lancer sur la base de production. La clé secrète se trouve dans le tableau de bord Supabase (Project Settings → API Keys). Ne la colle que dans le terminal, jamais dans un fichier :
+
+```sh
+SUPABASE_URL=https://tnkkgcyeokiuxjtrnyfr.supabase.co SUPABASE_SERVICE_KEY=... python3 scripts/import_osm.py --refresh
+```
+
+- `--refresh` est indispensable. Sans lui, le script réimporte le cache du mois précédent.
+- Si une région ne se télécharge pas, le script s'arrête avant d'écrire quoi que ce soit dans la base. Relance-le plus tard.
+- Le script met la base à jour, puis affiche le nombre de restos par règle et 20 exemples tirés au hasard. Le total doit rester proche de celui du mois précédent (environ 1 700).
+- **Un resto supprimé d'OpenStreetMap disparaît de l'app, et ses avis avec lui.** Cette suppression a déjà eu lieu quand les nombres s'affichent. Une chute brutale signale un problème côté OSM : écris-moi avant de relancer le script.
+
 ## Tests
 
 ```sh
