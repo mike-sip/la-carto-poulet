@@ -6,7 +6,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Description:** Install what's missing and create the first DB migration: the `restaurants` table with PostGIS and public read access.
 
 **Acceptance criteria:**
-- [ ] Xcode installed and selected (`xcodebuild -version` works); `xcodegen` installed with Homebrew *(you install Xcode and run the `sudo` command; I do the rest)*. Homebrew refuses installs until then (Command Line Tools too old), so the Supabase CLI runs as `npx supabase@2.121.0` for now
+- [x] Xcode installed and selected (`xcodebuild -version` works); `xcodegen` installed with Homebrew *(you install Xcode and run the `sudo` command; I do the rest)*. Homebrew refuses installs until then (Command Line Tools too old), so the Supabase CLI runs as `npx supabase@2.121.0` for now
 - [x] `supabase start` runs locally; migration creates `restaurants` (spec columns, unique `osm_id`, GIST index on `location`)
 - [x] RLS: anyone can read, no one but the service key can write
 
@@ -109,8 +109,8 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 ### Checkpoint B
 - [x] Tests pass, build clean
-- [ ] Sign in → rate → see the new average → edit → delete works in the simulator
-- [ ] Review with you
+- [x] Sign in → rate → see the new average → edit → delete works in the simulator (and on the iPhone against hosted Supabase)
+- [x] Review with you
 
 ## Task 8: Report a comment + auto-hide at 3 reports
 **Acceptance criteria:**
@@ -157,7 +157,7 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Acceptance criteria:**
 - [x] Attribution visible and links to openstreetmap.org/copyright; placeholder app icon shows on the home screen
 - [x] Hosted DB has the schema and the full import
-- [ ] On your iPhone over 4G, markers appear within 3 s
+- [x] On your iPhone over 4G, markers appear within 3 s
 
 **Notes:** Hosted project `tnkkgcyeokiuxjtrnyfr`; 8 migrations pushed with no seed; 1,742 restaurants imported (more than the 1,245 of the first import, because OSM grew). Editing the email templates needed custom SMTP, now Resend. The public key can read the map data and nothing private. Config.xcconfig (git-ignored) points at the hosted project.
 
@@ -167,5 +167,5 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 **Scope:** S
 
 ### Checkpoint C
-- [ ] All 7 spec success criteria met
-- [ ] Ready for TestFlight once the Apple Developer account is paid
+- [x] All 7 spec success criteria met (2–6 checked by you on the iPhone over 4G on 2026-10-18; 1 and 7 by the import and the 24 app + 50 DB tests)
+- [ ] Ready for TestFlight once the Apple Developer account is paid — waiting on the paid account
