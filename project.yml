@@ -27,6 +27,7 @@ targets:
         CFBundleDisplayName: "La Carto'Poulet"
         CFBundleDevelopmentRegion: fr
         UILaunchScreen: {}
+        ITSAppUsesNonExemptEncryption: false  # HTTPS only, so no export compliance question on each upload
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIAppFonts: [Shrikhand-Regular.ttf]
         NSLocationWhenInUseUsageDescription: "Ta position sert à te montrer les restos poulet autour de toi. Elle n'est jamais envoyée ni enregistrée."
