@@ -123,11 +123,16 @@ struct RatingForm: View {
                 .padding(16)
                 .redacted(reason: model.isLoaded || model.error != nil ? [] : .placeholder)
             }
+            .scrollDismissesKeyboard(.interactively)
             .background(Color("Feather"))
             .navigationTitle(restaurant.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Annuler") { dismiss() } }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("OK") { UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil) }
+                }
             }
             .confirmationDialog("Supprimer ton avis ?", isPresented: $confirmsDelete, titleVisibility: .visible) {
                 Button("Supprimer mon avis", role: .destructive) { Task { await finish(publishing: false) } }

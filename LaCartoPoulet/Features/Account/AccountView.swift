@@ -45,12 +45,17 @@ struct AccountView: View {
             } message: {
                 Text("Ton pseudo, tes avis, tes signalements et tes blocages seront effacés. C'est définitif.")
             }
+            .scrollDismissesKeyboard(.interactively)
             .task(id: model.isSignedIn) { await model.loadBlocks() }
             .navigationTitle("Mon compte")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("OK") { dismiss() }
+                }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("OK") { UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil) }
                 }
             }
         }
