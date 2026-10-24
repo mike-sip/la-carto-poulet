@@ -11,11 +11,54 @@ final class MapViewModel {
     private(set) var isEmptyArea = false
     private(set) var isLoading = false
     private(set) var failed = false
+    private(set) var foundRestaurants: [Restaurant] = []
+    private(set) var foundPlaces: [Place] = []
+    /// The query the found results belong to, so "no results" never shows for a query still being typed.
+    private(set) var searchedQuery = ""
 
     private let repository: RestaurantRepository
+    private let findPlaces: (String) async -> [Place]
 
-    init(repository: RestaurantRepository = SupabaseRestaurantRepository()) {
+    init(repository: RestaurantRepository = SupabaseRestaurantRepository(),
+         findPlaces: @escaping (String) async -> [Place] = MapViewModel.applePlaces) {
         self.repository = repository
+        self.findPlaces = findPlaces
+    }
+
+    struct Place: Identifiable {
+        let id = UUID()
+        let name: String
+        let detail: String?
+        let coordinate: CLLocationCoordinate2D
+    }
+
+    /// Restaurants by name and French towns or addresses. A failed half just shows no results.
+    func search(_ query: String) async {
+        let query = query.trimmingCharacters(in: .whitespaces)
+        guard query.count >= 2 else {
+            foundRestaurants = []
+            foundPlaces = []
+            return
+        }
+        async let restaurants = try? repository.search(query)
+        async let places = findPlaces(query)
+        let (r, p) = await (restaurants, places)
+        guard !Task.isCancelled else { return }  // a newer query is on its way
+        foundRestaurants = r ?? []
+        foundPlaces = p
+        searchedQuery = query
+    }
+
+    static func applePlaces(_ query: String) async -> [Place] {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+        request.resultTypes = .address
+        request.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 46.6, longitude: 2.4),
+                                            span: MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10))
+        let items = (try? await MKLocalSearch(request: request).start().mapItems) ?? []
+        return items.filter { $0.placemark.isoCountryCode == "FR" }.prefix(5).map {
+            Place(name: $0.name ?? query, detail: $0.placemark.postalCode, coordinate: $0.placemark.coordinate)
+        }
     }
 
     /// One attempt. Returns false on a network error so the caller can retry; old markers stay.

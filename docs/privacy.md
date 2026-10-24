@@ -16,6 +16,10 @@ Tu peux consulter la carte, les fiches et les avis sans compte. Dans ce cas, l'a
 
 Si tu l'autorises, l'app utilise ta position pour centrer la carte autour de toi. Elle reste sur ton iPhone : elle n'est jamais envoyée à nos serveurs ni enregistrée. L'app demande seulement les restos de la zone affichée à l'écran.
 
+## La recherche
+
+Ce que tu tapes dans la barre de recherche est envoyé à notre base (pour trouver les restos) et à Apple Plans (pour trouver les villes), le temps d'afficher les résultats. Ni l'une ni l'autre ne l'enregistre pour nous, et ce n'est pas lié à ton compte.
+
 ## Avec un compte
 
 Pour noter un resto, tu crées un compte. On enregistre alors :

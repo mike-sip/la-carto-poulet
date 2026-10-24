@@ -170,3 +170,8 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 - [x] All 7 spec success criteria met (2–6 checked by you on the iPhone over 4G on 2026-10-18; 1 and 7 by the import and the 24 app + 50 DB tests)
 - [x] On TestFlight: build 1.0 (1) uploaded 2026-10-24 (team CFQN5S599K)
 - [ ] App Review: 1.0 (1) submitted 2026-10-25, waiting on Apple
+
+## v1.1
+- [x] Search by restaurant name or town (migration 0009 + search bar; 27 app + 54 DB tests)
+- [ ] Production: you run `supabase db push` (adds `search_restaurants` and the `unaccent` extension) **before** 1.1 is uploaded
+- [ ] Upload 1.1 (2) to TestFlight once 1.0 is approved

@@ -223,6 +223,7 @@ final class MapViewModel {
 - Portuguese and Peruvian places are included only when their name shows they serve chicken (OSM can't tell what a place serves).
 - Chain list for v1: KFC, Popeyes, Chicken Street, Hungry Chicken.
 - "Suggest a missing restaurant" moves to v1.1.
+- v1.1 search (2026-10-25): one field on the map for restaurant names (`search_restaurants`, case- and accent-insensitive, 20 max) and French towns/addresses (Apple MapKit search, no key). Results show the distance from the map centre, since most OSM places have no city.
 - UI: native iOS + brand touch; ratings shown as drumsticks 🍗 1–5 (custom icon, accessible); no brand assets exist, so the spec defines palette, icon direction and tone.
 
 ## Open Questions

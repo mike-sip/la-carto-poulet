@@ -25,6 +25,8 @@ targets:
       path: LaCartoPoulet/Info.plist
       properties:
         CFBundleDisplayName: "La Carto'Poulet"
+        CFBundleShortVersionString: "1.1"
+        CFBundleVersion: "2"  # +1 on every App Store Connect upload
         CFBundleDevelopmentRegion: fr
         UILaunchScreen: {}
         ITSAppUsesNonExemptEncryption: false  # HTTPS only, so no export compliance question on each upload

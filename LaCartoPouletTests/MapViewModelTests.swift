@@ -13,6 +13,11 @@ private final class FakeRepository: RestaurantRepository, @unchecked Sendable {
         calls += 1
         return try result.get()
     }
+
+    func search(_ query: String) async throws -> [Restaurant] {
+        calls += 1
+        return try result.get()
+    }
 }
 
 private func restaurant(_ id: Int, _ lat: Double, _ lng: Double) -> Restaurant {
@@ -60,5 +65,25 @@ struct MapViewModelTests {
         let clusters = MapViewModel.clusters(
             [restaurant(1, 45.7601, 4.8401), restaurant(2, 45.7602, 4.8402), restaurant(3, 45.79, 4.87)], in: lyon)
         #expect(clusters.map(\.restaurants.count).sorted() == [1, 2])
+    }
+
+    @Test func searchFindsRestaurants() async {
+        let model = MapViewModel(repository: FakeRepository(.success([restaurant(1, 45.76, 4.84)])), findPlaces: { _ in [] })
+        await model.search("poulet")
+        #expect(model.foundRestaurants.map(\.id) == [1])
+    }
+
+    @Test func searchNeedsTwoLetters() async {
+        let repository = FakeRepository(.success([restaurant(1, 45.76, 4.84)]))
+        let model = MapViewModel(repository: repository, findPlaces: { _ in [] })
+        await model.search(" p ")
+        #expect(model.foundRestaurants.isEmpty)
+        #expect(repository.calls == 0)
+    }
+
+    @Test func offlineSearchFindsNothing() async {
+        let model = MapViewModel(repository: FakeRepository(.failure(Offline())), findPlaces: { _ in [] })
+        await model.search("poulet")
+        #expect(model.foundRestaurants.isEmpty)
     }
 }

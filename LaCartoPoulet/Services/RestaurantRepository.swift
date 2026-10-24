@@ -3,6 +3,8 @@ import Supabase
 
 protocol RestaurantRepository: Sendable {
     func restaurants(in region: MKCoordinateRegion) async throws -> [Restaurant]
+    /// Name contains the query, ignoring case and accents; at most 20.
+    func search(_ query: String) async throws -> [Restaurant]
 }
 
 struct SupabaseRestaurantRepository: RestaurantRepository {
@@ -14,6 +16,10 @@ struct SupabaseRestaurantRepository: RestaurantRepository {
             "min_lng": center.longitude - span.longitudeDelta / 2,
             "max_lng": center.longitude + span.longitudeDelta / 2,
         ]).execute().value
+    }
+
+    func search(_ query: String) async throws -> [Restaurant] {
+        try await supabase.rpc("search_restaurants", params: ["q": query]).execute().value
     }
 }
 

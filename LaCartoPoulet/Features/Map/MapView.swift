@@ -15,6 +15,8 @@ struct MapView: View {
     @State private var loadTask: Task<Void, Never>?
     @State private var selected: Restaurant?
     @State private var showsAccount = false
+    @State private var query = ""
+    @FocusState private var searching: Bool
     /// Hops per restaurant id; bumping one makes that marker hop twice.
     @State private var hops: [Int: Int] = [:]
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -59,17 +61,29 @@ struct MapView: View {
             MapUserLocationButton()
         }
         .safeAreaInset(edge: .top) {
-            Button { showsAccount = true } label: {
-                Image(systemName: account.isSignedIn ? "person.fill" : "person")
-                    .font(.title3)
-                    .foregroundStyle(Color("Ink"))
-                    .frame(width: 44, height: 44)
-                    .background(Color("Feather"), in: Circle())
-                    .shadow(color: .black.opacity(0.2), radius: 3, y: 1)
+            VStack(spacing: 8) {
+                HStack(spacing: 8) {
+                    searchField
+                    Button { showsAccount = true } label: {
+                        Image(systemName: account.isSignedIn ? "person.fill" : "person")
+                            .font(.title3)
+                            .foregroundStyle(Color("Ink"))
+                            .frame(width: 44, height: 44)
+                            .background(Color("Feather"), in: Circle())
+                            .shadow(color: .black.opacity(0.2), radius: 3, y: 1)
+                    }
+                    .accessibilityLabel("Mon compte")
+                }
+                if searching && query.trimmingCharacters(in: .whitespaces).count >= 2 {
+                    searchResults
+                }
             }
-            .accessibilityLabel("Mon compte")
-            .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.horizontal, 16)
+        }
+        .task(id: query) {
+            try? await Task.sleep(for: .milliseconds(300))  // waits for a pause in typing
+            guard !Task.isCancelled else { return }
+            await model.search(query)
         }
         .sheet(isPresented: $showsAccount) {
             AccountView(model: account)
@@ -126,6 +140,108 @@ struct MapView: View {
                 }
             } catch {}
         }
+    }
+
+    private var searchField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(Color("Feet"))
+                .accessibilityHidden(true)
+            TextField("Ville ou resto", text: $query)
+                .focused($searching)
+                .submitLabel(.search)
+                .autocorrectionDisabled()
+                .onSubmit {
+                    if let first = model.foundRestaurants.first { show(first) }
+                    else if let first = model.foundPlaces.first { go(to: first) }
+                }
+            if !query.isEmpty {
+                Button { query = "" } label: {
+                    Image(systemName: "xmark.circle.fill").foregroundStyle(Color("Feet"))
+                }
+                .accessibilityLabel("Effacer la recherche")
+            }
+        }
+        .foregroundStyle(Color("Ink"))
+        .padding(.horizontal, 14)
+        .frame(height: 44)
+        .background(Color("Feather"), in: Capsule())
+        .shadow(color: .black.opacity(0.2), radius: 3, y: 1)
+    }
+
+    private var searchResults: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(model.foundRestaurants) { restaurant in
+                    resultRow(restaurant.name, detail: detail(for: restaurant)) {
+                        Image("chicken-pin").resizable().frame(width: 28, height: 28)
+                    } action: { show(restaurant) }
+                }
+                ForEach(model.foundPlaces) { place in
+                    resultRow(place.name, detail: place.detail) {
+                        Image(systemName: "mappin.circle.fill").font(.title2).foregroundStyle(Color("Comb"))
+                    } action: { go(to: place) }
+                }
+                if model.foundRestaurants.isEmpty && model.foundPlaces.isEmpty
+                    && model.searchedQuery == query.trimmingCharacters(in: .whitespaces) {
+                    Text("Aucun resto ni ville à ce nom.")
+                        .font(.subheadline)
+                        .foregroundStyle(Color("Feet"))
+                        .padding(14)
+                }
+            }
+        }
+        .frame(maxHeight: 360)
+        .fixedSize(horizontal: false, vertical: true)  // as tall as the results, up to 360
+        .background(Color("Feather"), in: RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.2), radius: 3, y: 1)
+    }
+
+    /// Most restaurants have no city in OSM, so the distance is what tells same-named ones apart.
+    private func detail(for restaurant: Restaurant) -> String? {
+        guard let center = visibleRegion?.center else { return restaurant.city }
+        let meters = CLLocation(latitude: center.latitude, longitude: center.longitude)
+            .distance(from: CLLocation(latitude: restaurant.lat, longitude: restaurant.lng))
+        let distance = "à " + Measurement(value: meters, unit: UnitLength.meters)
+            .formatted(.measurement(width: .abbreviated, usage: .road))
+        return [restaurant.city, distance].compactMap { $0 }.joined(separator: ", ")
+    }
+
+    private func resultRow(_ title: String, detail: String?, @ViewBuilder icon: () -> some View,
+                           action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                icon().frame(width: 32).accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title).font(.body.weight(.semibold)).foregroundStyle(Color("Ink"))
+                    if let detail { Text(detail).font(.caption).foregroundStyle(Color("Feet")) }
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .contentShape(Rectangle())
+        }
+    }
+
+    /// Flies to the restaurant and opens its sheet.
+    private func show(_ restaurant: Restaurant) {
+        endSearch()
+        withAnimation {
+            position = .region(MKCoordinateRegion(center: restaurant.coordinate,
+                                                  span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)))
+        }
+        selected = restaurant
+    }
+
+    private func go(to place: MapViewModel.Place) {
+        endSearch()
+        withAnimation { position = .region(MKCoordinateRegion(center: place.coordinate, span: MapView.paris.span)) }
+    }
+
+    private func endSearch() {
+        searching = false
+        query = ""
     }
 
     private func pill(_ text: String) -> some View {
