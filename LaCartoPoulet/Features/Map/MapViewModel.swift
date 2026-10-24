@@ -7,6 +7,24 @@ final class MapViewModel {
     static let maxLatitudeSpan = 1.0
 
     private(set) var restaurants: [Restaurant] = []
+    var filter = Filter.all
+
+    enum Filter: String, CaseIterable, Identifiable {
+        case all = "Tous", fastFood = "Fast food", restaurant = "Restaurant", topRated = "4+ pilons"
+        var id: Self { self }
+
+        func matches(_ restaurant: Restaurant) -> Bool {
+            switch self {
+            case .all: true
+            case .fastFood: restaurant.kind == "fast_food"
+            case .restaurant: restaurant.kind == "restaurant"
+            case .topRated: (restaurant.avgStars ?? 0) >= 4
+            }
+        }
+    }
+
+    /// What the map shows: the loaded restaurants that pass the filter.
+    var shown: [Restaurant] { restaurants.filter(filter.matches) }
     private(set) var isTooFar = false
     private(set) var isEmptyArea = false
     private(set) var isLoading = false

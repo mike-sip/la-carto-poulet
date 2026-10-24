@@ -86,4 +86,21 @@ struct MapViewModelTests {
         await model.search("poulet")
         #expect(model.foundRestaurants.isEmpty)
     }
+
+    @Test func filterKeepsMatchingRestaurants() async {
+        var rated = restaurant(2, 45.76, 4.84)
+        rated.avgStars = 4.5
+        let restaurants = [restaurant(1, 45.76, 4.84), rated,
+                           Restaurant(id: 3, name: "Rôtisserie", kind: "restaurant", address: nil, city: nil, lat: 45.76, lng: 4.84,
+                                      avgStars: 3.9)]
+        let model = MapViewModel(repository: FakeRepository(.success(restaurants)))
+        _ = await model.load(lyon)
+        #expect(model.shown.map(\.id) == [1, 2, 3])
+        model.filter = .fastFood
+        #expect(model.shown.map(\.id) == [1, 2])
+        model.filter = .restaurant
+        #expect(model.shown.map(\.id) == [3])
+        model.filter = .topRated
+        #expect(model.shown.map(\.id) == [2])
+    }
 }

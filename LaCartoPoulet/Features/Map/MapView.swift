@@ -26,7 +26,7 @@ struct MapView: View {
         Map(position: $position) {
             UserAnnotation()
             if let visibleRegion, !model.isTooFar {
-                ForEach(MapViewModel.clusters(model.restaurants, in: visibleRegion)) { cluster in
+                ForEach(MapViewModel.clusters(model.shown, in: visibleRegion)) { cluster in
                     if cluster.restaurants.count == 1 {
                         Annotation(cluster.restaurants[0].name, coordinate: cluster.coordinate, anchor: .bottom) {
                             Image("chicken-pin")
@@ -76,6 +76,8 @@ struct MapView: View {
                 }
                 if searching && query.trimmingCharacters(in: .whitespaces).count >= 2 {
                     searchResults
+                } else if !searching {
+                    filterChips
                 }
             }
             .padding(.horizontal, 16)
@@ -112,6 +114,8 @@ struct MapView: View {
         .overlay(alignment: .bottom) {
             if model.isTooFar {
                 pill("Zoome pour voir les restos")
+            } else if model.shown.isEmpty && !model.restaurants.isEmpty {
+                pill("Aucun resto « \(model.filter.rawValue) » ici")
             } else if model.isEmptyArea && !model.failed {
                 pill("Aucun resto poulet ici. Déplace la carte !")
             } else if model.isLoading {
@@ -167,6 +171,28 @@ struct MapView: View {
         .frame(height: 44)
         .background(Color("Feather"), in: Capsule())
         .shadow(color: .black.opacity(0.2), radius: 3, y: 1)
+    }
+
+    private var filterChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(MapViewModel.Filter.allCases) { filter in
+                    let isOn = model.filter == filter
+                    Button { model.filter = filter } label: {
+                        Text(filter.rawValue)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Color(isOn ? "Feather" : "Ink"))
+                            .padding(.horizontal, 14)
+                            .frame(height: 34)
+                            .background(Color(isOn ? "Ink" : "Feather"), in: Capsule())
+                            .shadow(color: .black.opacity(0.2), radius: 3, y: 1)
+                    }
+                    .accessibilityAddTraits(isOn ? .isSelected : [])
+                }
+            }
+            .padding(.vertical, 4)  // room for the shadows
+        }
+        .scrollClipDisabled()
     }
 
     private var searchResults: some View {

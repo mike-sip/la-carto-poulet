@@ -224,6 +224,7 @@ final class MapViewModel {
 - Chain list for v1: KFC, Popeyes, Chicken Street, Hungry Chicken.
 - "Suggest a missing restaurant" moves to v1.1.
 - v1.1 search (2026-10-25): one field on the map for restaurant names (`search_restaurants`, case- and accent-insensitive, 20 max) and French towns/addresses (Apple MapKit search, no key). Results show the distance from the map centre, since most OSM places have no city.
+- v1.1 filters (2026-10-25): chips under the search bar — Tous, Fast food, Restaurant, 4+ pilons. They filter the restaurants already loaded on the map, client-side; `restaurants_in_bbox` now also returns `avg_stars` (migration 0010).
 - UI: native iOS + brand touch; ratings shown as drumsticks 🍗 1–5 (custom icon, accessible); no brand assets exist, so the spec defines palette, icon direction and tone.
 
 ## Open Questions
