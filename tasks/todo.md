@@ -173,5 +173,5 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 ## v1.1
 - [x] Search by restaurant name or town (migration 0009 + search bar; 27 app + 54 DB tests)
-- [ ] Production: you run `supabase db push` (adds `search_restaurants` and the `unaccent` extension) **before** 1.1 is uploaded
+- [x] Production: `supabase db push` done 2026-10-25 (adds `search_restaurants` and the `unaccent` extension) **before** 1.1 is uploaded
 - [ ] Upload 1.1 (2) to TestFlight once 1.0 is approved
