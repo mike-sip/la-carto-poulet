@@ -3,3 +3,6 @@
 // "//" starts a comment in xcconfig files, hence the $() between the slashes.
 SUPABASE_URL = http:/$()/127.0.0.1:54321
 SUPABASE_ANON_KEY = paste-the-anon-key-here
+// Apple Developer Team ID (developer.apple.com → Membership details)
+DEVELOPMENT_TEAM =
+CODE_SIGN_STYLE = Automatic
