@@ -18,7 +18,7 @@ Si tu l'autorises, l'app utilise ta position pour centrer la carte autour de toi
 
 ## La recherche
 
-Ce que tu tapes dans la barre de recherche est envoyé à notre base (pour trouver les restos) et à Apple Plans (pour trouver les villes), le temps d'afficher les résultats. Ni l'une ni l'autre ne l'enregistre pour nous, et ce n'est pas lié à ton compte.
+Ce que tu tapes dans la barre de recherche est envoyé à notre base (pour trouver les restos) et à Apple Plans (pour trouver les villes), le temps d'afficher les résultats. Nous ne l'enregistrons pas et ne le lions pas à ton compte. Apple le traite selon sa propre politique de confidentialité.
 
 ## Avec un compte
 
