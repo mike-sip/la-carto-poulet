@@ -27,7 +27,7 @@
 
 ## Captures d'écran
 
-`design/screenshots/` : 4 captures iPhone 6,9" (1320 × 2868, JPEG sans transparence), à déposer dans l'emplacement « iPhone 6,9" ». Le resto « Le Poulet Doré » et ses avis sont fictifs : ils ont été créés sur la base locale pour les captures.
+`design/screenshots/` : 4 captures iPhone 6,9" (1320 × 2868, JPEG sans transparence) ; si l’emplacement demandé est « 6,5" », prendre `design/screenshots/6.5/` (1284 × 2778), à déposer dans l'emplacement « iPhone 6,9" ». Le resto « Le Poulet Doré » et ses avis sont fictifs : ils ont été créés sur la base locale pour les captures.
 
 ## Confidentialité de l'app (questionnaire)
 
