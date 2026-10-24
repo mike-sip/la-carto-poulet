@@ -225,6 +225,7 @@ final class MapViewModel {
 - "Suggest a missing restaurant" moves to v1.1.
 - v1.1 search (2026-10-25): one field on the map for restaurant names (`search_restaurants`, case- and accent-insensitive, 20 max) and French towns/addresses (Apple MapKit search, no key). Results show the distance from the map centre, since most OSM places have no city.
 - v1.1 filters (2026-10-25): chips under the search bar — Tous, Fast food, Restaurant, 4+ pilons. They filter the restaurants already loaded on the map, client-side; `restaurants_in_bbox` now also returns `avg_stars` (migration 0010).
+- v1.1 suggest a restaurant (2026-10-25): signed-in users send a name, an address and an optional note (`suggestions`, write-only, migration 0011). The admin adds good ones to OpenStreetMap, so OSM stays the only source and the monthly import picks them up if their name passes the chicken rule. Entry points: an empty search result and Mon compte.
 - UI: native iOS + brand touch; ratings shown as drumsticks 🍗 1–5 (custom icon, accessible); no brand assets exist, so the spec defines palette, icon direction and tone.
 
 ## Open Questions

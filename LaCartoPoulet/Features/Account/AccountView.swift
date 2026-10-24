@@ -5,6 +5,7 @@ struct AccountView: View {
     @Bindable var model: AccountViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var confirmsDelete = false
+    @State private var suggests = false
 
     var body: some View {
         NavigationStack {
@@ -16,6 +17,9 @@ struct AccountView: View {
                         Text("Ton email n'est jamais montré aux autres.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
+                        Button("Suggérer un resto manquant") { suggests = true }
+                            .foregroundStyle(Color("Feet"))
+                            .frame(minHeight: 44)
                         blockedList
                         if let error = model.error {
                             Text(error).font(.subheadline).foregroundStyle(Color("Comb"))
@@ -43,8 +47,9 @@ struct AccountView: View {
             .confirmationDialog("Supprimer ton compte ?", isPresented: $confirmsDelete, titleVisibility: .visible) {
                 Button("Supprimer mon compte", role: .destructive) { Task { await model.deleteAccount() } }
             } message: {
-                Text("Ton pseudo, tes avis, tes signalements et tes blocages seront effacés. C'est définitif.")
+                Text("Ton pseudo, tes avis, tes signalements, tes blocages et tes suggestions seront effacés. C'est définitif.")
             }
+            .sheet(isPresented: $suggests) { SuggestSheet(account: model) }
             .scrollDismissesKeyboard(.interactively)
             .task(id: model.isSignedIn) { await model.loadBlocks() }
             .navigationTitle("Mon compte")

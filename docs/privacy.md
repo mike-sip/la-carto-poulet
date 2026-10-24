@@ -4,7 +4,7 @@ title: Confidentialité – La Carto'Poulet
 
 # Politique de confidentialité
 
-*Dernière mise à jour : 18 octobre 2026*
+*Dernière mise à jour : 25 octobre 2026*
 
 La Carto'Poulet est une app iPhone qui montre les restos poulet de France métropolitaine et permet de les noter. Elle est éditée par Mike SIP, à titre personnel. Cette page explique quelles données l'app utilise, et pourquoi.
 
@@ -31,6 +31,7 @@ Pour noter un resto, tu crées un compte. On enregistre alors :
 | Tes avis (note et commentaire) | Les afficher sur la fiche du resto | Tous les utilisateurs |
 | Tes signalements | Masquer les commentaires signalés 3 fois et les faire vérifier | L'administrateur |
 | Les utilisateurs que tu bloques | Cacher leurs avis pour toi | Personne d'autre que toi |
+| Tes suggestions de restos (nom, adresse, note) | Ajouter les restos manquants à OpenStreetMap | L'administrateur |
 
 Il n'y a ni publicité, ni pistage, ni revente de données, ni outil de mesure d'audience.
 
@@ -43,7 +44,7 @@ Les échanges entre l'app et ces services sont chiffrés (HTTPS).
 
 ## Combien de temps
 
-Tes données sont gardées tant que ton compte existe. Tu peux supprimer ton compte depuis l'app, dans **Mon compte → Supprimer mon compte**. Ton email, ton pseudo, tes avis, tes signalements et tes blocages sont alors effacés tout de suite et définitivement.
+Tes données sont gardées tant que ton compte existe. Tu peux supprimer ton compte depuis l'app, dans **Mon compte → Supprimer mon compte**. Ton email, ton pseudo, tes avis, tes signalements, tes blocages et tes suggestions sont alors effacés tout de suite et définitivement.
 
 ## Tes droits
 

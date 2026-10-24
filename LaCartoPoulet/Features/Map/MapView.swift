@@ -16,6 +16,8 @@ struct MapView: View {
     @State private var selected: Restaurant?
     @State private var showsAccount = false
     @State private var query = ""
+    /// The name to prefill when suggesting a missing restaurant; nil when the sheet is closed.
+    @State private var suggestedName: String?
     @FocusState private var searching: Bool
     /// Hops per restaurant id; bumping one makes that marker hop twice.
     @State private var hops: [Int: Int] = [:]
@@ -89,6 +91,9 @@ struct MapView: View {
         }
         .sheet(isPresented: $showsAccount) {
             AccountView(model: account)
+        }
+        .sheet(isPresented: Binding { suggestedName != nil } set: { if !$0 { suggestedName = nil } }) {
+            SuggestSheet(account: account, name: suggestedName ?? "")
         }
         .onMapCameraChange(frequency: .onEnd) { context in
             reload(context.region)
@@ -210,10 +215,20 @@ struct MapView: View {
                 }
                 if model.foundRestaurants.isEmpty && model.foundPlaces.isEmpty
                     && model.searchedQuery == query.trimmingCharacters(in: .whitespaces) {
-                    Text("Aucun resto ni ville à ce nom.")
-                        .font(.subheadline)
-                        .foregroundStyle(Color("Feet"))
-                        .padding(14)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Aucun resto ni ville à ce nom.")
+                            .font(.subheadline)
+                            .foregroundStyle(Color("Feet"))
+                        Button("Il manque un resto ? Suggère-le") {
+                            suggestedName = query.trimmingCharacters(in: .whitespaces)
+                            endSearch()
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color("Comb"))
+                        .frame(minHeight: 44)
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.top, 10)
                 }
             }
         }

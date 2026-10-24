@@ -77,6 +77,20 @@ delete from auth.users where id = '00000000-0000-0000-0000-000000000000';
 
 Ça efface tout ce qui lui appartient, comme « Supprimer mon compte » dans l'app. Il pourra en recréer un avec la même adresse email. Si c'est un problème, ajoute aussi son adresse dans **Authentication → Users** pour la bloquer. Ce point n'est pas automatisé en v1.
 
+## 5. Les restos suggérés
+
+```sql
+select s.id, s.name, s.address, s.note, p.nickname, s.created_at
+from public.suggestions s join public.profiles p using (user_id)
+order by s.created_at desc;
+```
+
+Pour chaque bon resto, vérifie qu'il existe (Google Maps, son site), puis ajoute-le sur https://www.openstreetmap.org (bouton **Modifier**, catégorie *Restaurant* ou *Fast food*, avec son nom exact). Il arrivera dans l'app à l'import du mois suivant, **seulement si son nom passe la règle « poulet »** (voir SPEC.md). Ensuite, supprime la suggestion, qu'elle soit retenue ou non :
+
+```sql
+delete from public.suggestions where id = 123;
+```
+
 ## Pour une demande RGPD
 
 Si quelqu'un écrit à `contact@` pour récupérer ses données, cherche son compte par email :

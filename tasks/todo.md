@@ -176,4 +176,6 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 - [x] Production: `supabase db push` done 2026-10-25 (adds `search_restaurants` and the `unaccent` extension) **before** 1.1 is uploaded
 - [x] Filter chips by type and 4+ pilons (migration 0010 + chips; 28 app + 56 DB tests)
 - [x] Production: `supabase db push` done 2026-10-25 (adds `avg_stars` to `restaurants_in_bbox`) **before** 1.1 is uploaded
+- [x] Suggest a missing restaurant (migration 0011 + SuggestSheet; 28 app + 62 DB tests)
+- [ ] Production: you run `supabase db push` (adds `suggestions`) **before** 1.1 is uploaded
 - [ ] Upload 1.1 (2) to TestFlight once 1.0 is approved

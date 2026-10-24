@@ -18,6 +18,8 @@ private final class FakeRepository: RestaurantRepository, @unchecked Sendable {
         calls += 1
         return try result.get()
     }
+
+    func suggest(name: String, address: String, note: String?) async throws {}
 }
 
 private func restaurant(_ id: Int, _ lat: Double, _ lng: Double) -> Restaurant {

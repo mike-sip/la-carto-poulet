@@ -5,6 +5,8 @@ protocol RestaurantRepository: Sendable {
     func restaurants(in region: MKCoordinateRegion) async throws -> [Restaurant]
     /// Name contains the query, ignoring case and accents; at most 20.
     func search(_ query: String) async throws -> [Restaurant]
+    /// Sends a missing restaurant to the admin. Signed-in users only.
+    func suggest(name: String, address: String, note: String?) async throws
 }
 
 struct SupabaseRestaurantRepository: RestaurantRepository {
@@ -20,6 +22,14 @@ struct SupabaseRestaurantRepository: RestaurantRepository {
 
     func search(_ query: String) async throws -> [Restaurant] {
         try await supabase.rpc("search_restaurants", params: ["q": query]).execute().value
+    }
+
+    func suggest(name: String, address: String, note: String?) async throws {
+        let userID = try await supabase.auth.session.user.id
+        try await supabase.from("suggestions")
+            .insert(["user_id": AnyJSON.string(userID.uuidString), "name": .string(name), "address": .string(address),
+                     "note": note.map(AnyJSON.string) ?? .null])
+            .execute()
     }
 }
 
