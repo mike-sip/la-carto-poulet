@@ -168,4 +168,4 @@ Rules for every task: tests pass, build succeeds, SPEC.md boundaries respected, 
 
 ### Checkpoint C
 - [x] All 7 spec success criteria met (2–6 checked by you on the iPhone over 4G on 2026-10-18; 1 and 7 by the import and the 24 app + 50 DB tests)
-- [ ] Ready for TestFlight once the Apple Developer account is paid — waiting on the paid account
+- [x] On TestFlight: build 1.0 (1) uploaded 2026-10-24 (team CFQN5S599K)
